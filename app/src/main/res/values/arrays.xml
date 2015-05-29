@@ -1,0 +1,11 @@
+<resources>
+  <array name="pref_units_values">
+    <item>@string/pref_units_celsius</item>
+    <item>@string/pref_units_farenheit</item>
+  </array>
+
+  <array name="pref_units_options">
+    <item>@string/pref_units_celsius</item>
+    <item>@string/pref_units_farenheit</item>
+  </array>
+</resources>
