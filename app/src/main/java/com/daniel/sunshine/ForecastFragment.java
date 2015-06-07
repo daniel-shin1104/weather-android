@@ -12,9 +12,8 @@ import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
 import com.daniel.sunshine.data.WeatherContract;
+import com.daniel.sunshine.service.SunshineService;
 
 import java.util.Date;
 
@@ -24,7 +23,7 @@ import java.util.Date;
  */
 public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor> {
   private final String LOG_TAG = "sunshine:" + ForecastFragment.class.getSimpleName();
-  private SimpleCursorAdapter forecastAdapter;
+  private ForecastAdapter forecastAdapter;
 
   private static final int FORECAST_LOADER = 0;
   private String location;
@@ -40,7 +39,10 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
     WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
     WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
     WeatherContract.WeatherEntry.COLUMN_MIN_TEMP,
-    WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING
+    WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING,
+    WeatherContract.WeatherEntry.COLUMN_WEATHER_ID,
+    WeatherContract.LocationEntry.COLUMN_COORD_LAT,
+    WeatherContract.LocationEntry.COLUMN_COORD_LONG
   };
 
   // These indices are tied to FORECAST_COLUMNS. If the FORECAST_COLUMNS changes, these must change.
@@ -50,6 +52,9 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
   public static final int COL_WEATHER_MAX_TEMP = 3;
   public static final int COL_WEATHER_MIN_TEMP = 4;
   public static final int COL_LOCATION_SETTING = 5;
+  public static final int COL_WEATHER_CONDITION_ID = 6;
+  public static final int COL_COORD_LAT = 7;
+  public static final int COL_COORD_LONG = 8;
 
   public ForecastFragment() {
   }
@@ -95,73 +100,24 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
 
-    forecastAdapter = new SimpleCursorAdapter(
-      getActivity(),
-      R.layout.list_item_forecast,
-      null,
-      // the column names to use to fill the textviews
-      new String[]{
-        WeatherContract.WeatherEntry.COLUMN_DATETEXT,
-        WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
-        WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
-        WeatherContract.WeatherEntry.COLUMN_MIN_TEMP
-      },
-      new int[]{
-        R.id.list_item_date_textview,
-        R.id.list_item_forecast_textview,
-        R.id.list_item_high_textview,
-        R.id.list_item_low_textview
-      },
-      0
-    );
+    // The ArrayAdapter will take data from a source and use it to populate the ListView it's attached to.
+    forecastAdapter = new ForecastAdapter(getActivity(), null, 0);
 
-    forecastAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
-      @Override
-      public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-        switch (columnIndex) {
-          case COL_WEATHER_MAX_TEMP:
-          case COL_WEATHER_MIN_TEMP:
-            // we have to do some formatting and possibly a conversion
-            ((TextView) view).setText(Utility.formatTemperature(
-              cursor.getDouble(columnIndex),
-              Utility.isCelsius(getActivity())
-            ));
-
-            return true;
-          case COL_WEATHER_DATE:
-            String dateString = cursor.getString(columnIndex);
-            TextView dateView = (TextView) view;
-            dateView.setText(Utility.formatDate(dateString));
-            return true;
-
-          default:
-            return false;
-        }
-      }
-    });
-
-
-    // The SimpleCursorAdapter will take data from the database through the Loader and use it to populate the ListView it's attached to.
     View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-    // Get a reference to the ListView, and attach this adapter to it.
-    ListView listView = (ListView) rootView.findViewById(
-      R.id.listview_forecast
-    );
-
+    // Get a reference to the ListView and attach this adapter to it.
+    ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
     listView.setAdapter(forecastAdapter);
     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Cursor cursor = forecastAdapter.getCursor();
-
         if (cursor != null && cursor.moveToPosition(position)) {
           Intent intent = new Intent(getActivity(), DetailActivity.class)
-            .putExtra(DetailActivity.DATE_KEY, cursor.getString(COL_WEATHER_DATE));
+            .putExtra(DetailActivityFragment.DATE_KEY, cursor.getString(COL_WEATHER_DATE));
 
           startActivity(intent);
         }
-
       }
     });
 
@@ -175,8 +131,13 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
   }
 
   public void updateWeather() {
-    String location = Utility.getPreferredLocation(getActivity());
-    new FetchWeatherTask(getActivity()).execute(location);
+    Intent intent = new Intent(getActivity(), SunshineService.class);
+    intent.putExtra(
+      SunshineService.LOCATION_QUERY_EXTRA,
+      Utility.getPreferredLocation(getActivity())
+    );
+
+    getActivity().startService(intent);
   }
 
   @Override

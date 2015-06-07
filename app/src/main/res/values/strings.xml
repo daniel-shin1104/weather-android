@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
   <string name="app_name">Sunshine</string>
   <string name="hello_world">Hello world!</string>
   <string name="action_settings">Settings</string>
@@ -23,4 +23,27 @@
   <string name="pref_units_key">temperature</string>
   <string name="pref_units_celsius">celsius</string>
   <string name="pref_units_farenheit">farenheit</string>
+  <string name="today">Today</string>
+  <string name="tomorrow">Tomorrow</string>
+
+  <!-- Date format for displaying day of week and date (i.e. Mon Jun 1) -->
+  <string name="format_full_friendly_date">
+    <xliff:g id="day">%1$s</xliff:g>, <xliff:g id="date">%2$s</xliff:g>
+  </string>
+  
+  <string name="format_temperature">
+    <xliff:g id="temp">%1.0f</xliff:g>
+    \u00B0
+  </string>
+
+  <!-- wind speed -->
+  <string name="format_wind_mph">Wind: <xliff:g id="wind_speed">%1.0f</xliff:g> mph <xliff:g id="wind_dir">%2$s</xliff:g></string>
+  <string name="format_wind_kmh">Wind: <xliff:g id="wind_speed">%1.0f</xliff:g> km/h <xliff:g id="wind_dir">%2$s</xliff:g></string>
+
+  <!-- pressure -->
+  <string name="format_pressure">Pressure: <xliff:g id="pressure">%1.0f</xliff:g> hPa</string>
+
+  <!-- Humidity-->
+  <string name="format_humidity">Humidity: <xliff:g id="humidity">%1.0f</xliff:g> %%</string>
+
 </resources>

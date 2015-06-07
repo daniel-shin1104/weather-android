@@ -16,6 +16,9 @@ public class MainActivity extends ActionBarActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
+    // This makes action bars to be on same elevation (i.e. no casting shadow)
+    getSupportActionBar().setElevation(0f);
   }
 
   public void openPreferredLocationInMap() {

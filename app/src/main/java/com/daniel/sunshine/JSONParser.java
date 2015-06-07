@@ -8,6 +8,7 @@ import android.database.DatabaseUtils;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import com.daniel.sunshine.data.WeatherContract;
+import com.daniel.sunshine.service.SunshineService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,13 +25,13 @@ public class JSONParser {
   private final String LOG_TAG = "sunshine:" + JSONParser.class.getSimpleName();
 
   private final Context context;
-  private final FetchWeatherTask fetchWeatherTask;
+  private final SunshineService sunshineService;
 
   private boolean DEBUG = true;
 
-  public JSONParser(Context context, FetchWeatherTask fetchWeatherTask) {
+  public JSONParser(Context context, SunshineService sunshineService) {
     this.context = context;
-    this.fetchWeatherTask = fetchWeatherTask;
+    this.sunshineService = sunshineService;
   }
 
   /* The date/time conversion code is going to be moved outside the asynctask later,
@@ -86,12 +87,12 @@ public class JSONParser {
 
     JSONObject coordJSON = cityJSON.getJSONObject("coord");
     double cityLatitude = coordJSON.getLong("lat");
-    double cityLongitude = coordJSON.getLong("long");
+    double cityLongitude = coordJSON.getLong("lon");
 
     Log.v(LOG_TAG, cityName + ", with coord: " + cityLatitude + " " + cityLongitude);
 
     // Insert the location into the database.
-    long locationID = fetchWeatherTask.addLocation(locationSetting, cityName, cityLatitude, cityLongitude);
+    long locationID = sunshineService.addLocation(locationSetting, cityName, cityLatitude, cityLongitude);
 
     JSONArray weatherArray = forecastJson.getJSONArray("list");
     // Get and insert the new weather information into the database
