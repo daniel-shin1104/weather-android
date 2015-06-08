@@ -121,7 +121,7 @@ public class SunshineService extends IntentService {
 
     try {
       new JSONParser(context, this).getWeatherDataFromJson(forecastJsonStr, numDays, locationQuery);
-    } catch (JSONException e) {
+    } catch (JSONException | NullPointerException e) {
       Log.e(LOG_TAG, e.getMessage(), e);
       e.printStackTrace();
     }

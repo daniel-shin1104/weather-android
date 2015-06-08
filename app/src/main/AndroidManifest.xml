@@ -40,6 +40,9 @@
         <provider
           android:authorities="com.daniel.sunshine"
           android:name=".data.WeatherProvider" />
+
+        <service
+          android:name=".service.SunshineService" />
     </application>
 
 </manifest>
