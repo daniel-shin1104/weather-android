@@ -1,40 +1,37 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+  compileSdkVersion 22
+  buildToolsVersion "23.0.0 rc2"
 
-    defaultConfig {
-        applicationId "com.daniel.sunshine"
-        minSdkVersion 16
-        targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+  defaultConfig {
+    applicationId "com.daniel.sunshine"
+    minSdkVersion 16
+    targetSdkVersion 22
+    versionCode 1
+    versionName "1.0"
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
+  }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:22.0.0'
-    compile 'com.android.support:support-v4:22.0.0'
+  compile fileTree(dir: 'libs', include: ['*.jar'])
+  compile 'com.android.support:appcompat-v7:22.2.0'
 }
 
-//gradle.buildFinished {
-//    "growlnotify -m 'Finished!!'".execute()
-//}
+// Custom Hooks for android plugin tasks.
+gradle.projectsEvaluated {
+  compileDebugSources.doLast {
+    "/usr/local/bin/growlnotify -t Android Studio -m Compiled".execute()
+  }
 
-//build.doLast {
-//    "growlnotify -m 'Finished!'".execute()
-//}
-
-//task notifyBuildFinished {
-//    "growlnotify -m 'Finished!'".execute()
-//}
-//
-//build.finalizedBy(notifyBuildFinished)
+  assembleDebug.doLast {
+    "/usr/local/bin/growlnotify -t Android Studio -m Assembled".execute()
+  }
+}
