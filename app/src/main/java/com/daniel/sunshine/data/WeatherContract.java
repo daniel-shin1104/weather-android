@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import org.androidannotations.annotations.EBean;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,6 +15,7 @@ import java.util.Date;
  */
 
 // Defines table and column names for the weather database.
+@EBean(scope = EBean.Scope.Singleton)
 public class WeatherContract {
   // The "Content Authority" is a name for the entire content provider, similar to the relatonship between a domain name and its website
   // A convenient string to use for the content authority is the package name for the app, which is guaranteed to be unique on the device

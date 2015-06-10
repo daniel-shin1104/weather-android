@@ -1,6 +1,5 @@
 package com.daniel.sunshine.service;
 
-import android.app.IntentService;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -11,6 +10,9 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import com.daniel.sunshine.JSONParser;
 import com.daniel.sunshine.data.WeatherContract;
+import org.androidannotations.annotations.EIntentService;
+import org.androidannotations.annotations.ServiceAction;
+import org.androidannotations.api.support.app.AbstractIntentService;
 import org.json.JSONException;
 
 import java.io.BufferedReader;
@@ -24,14 +26,21 @@ import java.net.URL;
  * Created by daniel on 6/8/15.
  */
 
-public class SunshineService extends IntentService {
+@EIntentService
+public class SunshineService extends AbstractIntentService {
   private ArrayAdapter<String> forecastAdapter;
   private Context context;
   public static final String LOCATION_QUERY_EXTRA = "lqe";
   private final String LOG_TAG = SunshineService.class.getSimpleName();
 
   public SunshineService() {
-    super("Sunshine");
+    super(SunshineService.class.getSimpleName());
+  }
+
+  @ServiceAction
+  void requestWeatherInformation(String locationQuery) {
+
+
   }
 
   @Override

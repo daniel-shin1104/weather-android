@@ -3,7 +3,7 @@ apply plugin: "android-apt"
 
 // Constants
 def packageName = "com.daniel.sunshine"
-def AndroidAnnotationsVersion = "3.2"
+def AndroidAnnotationsVersion = "3.3.1"
 
 // Build Script Dependencies
 buildscript {

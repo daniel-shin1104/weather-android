@@ -9,11 +9,17 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
-import android.view.*;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import com.daniel.sunshine.data.WeatherContract;
-import com.daniel.sunshine.service.SunshineService;
+import com.daniel.sunshine.service.SunshineService_;
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
 
 import java.util.Date;
 
@@ -21,7 +27,10 @@ import java.util.Date;
 /**
  * Encapsulates fetching the forecast and displaying it as a {@link ListView} layout.
  */
+@EFragment(R.layout.fragment_main)
 public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor> {
+  @ViewById(R.id.listview_forecast) ListView listView;
+
   private final String LOG_TAG = "sunshine:" + ForecastFragment.class.getSimpleName();
   private ForecastAdapter forecastAdapter;
 
@@ -96,17 +105,10 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
     return super.onOptionsItemSelected(item);
   }
 
-  @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                           Bundle savedInstanceState) {
-
-    // The ArrayAdapter will take data from a source and use it to populate the ListView it's attached to.
+  @AfterViews
+  void onViewCreated() {
     forecastAdapter = new ForecastAdapter(getActivity(), null, 0);
 
-    View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-    // Get a reference to the ListView and attach this adapter to it.
-    ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
     listView.setAdapter(forecastAdapter);
     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
@@ -120,8 +122,6 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
         }
       }
     });
-
-    return rootView;
   }
 
   @Override
@@ -131,13 +131,19 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
   }
 
   public void updateWeather() {
-    Intent intent = new Intent(getActivity(), SunshineService.class);
-    intent.putExtra(
-      SunshineService.LOCATION_QUERY_EXTRA,
-      Utility.getPreferredLocation(getActivity())
-    );
+    SunshineService_.intent(getActivity().getApplication())
 
-    getActivity().startService(intent);
+      .start();
+
+
+
+//    Intent intent = new Intent(getActivity(), SunshineService.class);
+//    intent.putExtra(
+//      SunshineService.LOCATION_QUERY_EXTRA,
+//      Utility.getPreferredLocation(getActivity())
+//    );
+//
+//    getActivity().startService(intent);
   }
 
   @Override

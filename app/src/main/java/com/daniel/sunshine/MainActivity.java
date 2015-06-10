@@ -7,15 +7,15 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import org.androidannotations.annotations.EActivity;
 
-
+@EActivity(R.layout.activity_main)
 public class MainActivity extends ActionBarActivity {
   private final String LOG_TAG = "sunshine:" + MainActivity.class.getSimpleName();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
 
     // This makes action bars to be on same elevation (i.e. no casting shadow)
     getSupportActionBar().setElevation(0f);
