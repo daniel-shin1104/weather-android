@@ -128,14 +128,7 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
   public Loader<Cursor> onCreateLoader(int id, Bundle args) {
     Log.v(LOG_TAG, "In onCreateLoader");
 
-//    Intent intent = getActivity().getIntent();
-//    if (intent == null || !intent.hasExtra(DATE_KEY)) {
-//      return null;
-//    }
-
     String forecast_date = ((DetailActivity) getActivity()).forecast_date;
-
-//    String forecastDate = intent.getStringExtra(DATE_KEY);
 
     // Sort order: Ascending, by date.
     String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATETEXT + " ASC";

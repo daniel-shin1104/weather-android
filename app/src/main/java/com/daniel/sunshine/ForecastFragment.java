@@ -8,9 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.ListView;
 import com.daniel.sunshine.data.WeatherContract;
 import com.daniel.sunshine.service.SunshineService_;
@@ -64,31 +61,14 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
   public ForecastFragment() {
   }
 
-  @Override
-  public void onViewCreated(View view, Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-
-    setHasOptionsMenu(true);
+  @OptionsItem(R.id.action_refresh)
+  void onOptionsActionRefreshSelected() {
+    updateWeather();
   }
 
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    // Handle action bar item clicks here.
-    // The action bar will automatically handle clicks on the Home/Up button, as long as you specify a parent activity in AndroidManifest.xml.
-    Log.d(LOG_TAG, "Tapped!");
-
-    int id = item.getItemId();
-    switch (id) {
-      case R.id.action_refresh:
-        updateWeather();
-        return true;
-
-      case R.id.action_settings:
-        startActivity(new Intent(getActivity(), SettingsActivity.class));
-        return true;
-    }
-
-    return super.onOptionsItemSelected(item);
+  @OptionsItem(R.id.action_settings)
+  void onOptionsActionSettingsSelected() {
+    startActivity(new Intent(getActivity(), SettingsActivity.class));
   }
 
   @ItemClick(R.id.listview_forecast)
@@ -96,7 +76,7 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
     Cursor cursor = forecastAdapter.getCursor();
     if (cursor != null && cursor.moveToPosition(position)) {
 
-      DetailActivity_.intent(getActivity().getApplication())
+      DetailActivity_.intent(this)
         .forecast_date(cursor.getString(COL_WEATHER_DATE))
         .start();
     }
