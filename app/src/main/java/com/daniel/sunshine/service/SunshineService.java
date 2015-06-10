@@ -2,11 +2,9 @@ package com.daniel.sunshine.service;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 import com.daniel.sunshine.JSONParser;
 import com.daniel.sunshine.data.WeatherContract;
 import org.androidannotations.annotations.EIntentService;
@@ -27,10 +25,12 @@ import java.net.URL;
 
 @EIntentService
 public class SunshineService extends AbstractIntentService {
-  private ArrayAdapter<String> forecastAdapter;
-  private Context context;
-  public static final String LOCATION_QUERY_EXTRA = "lqe";
+//  private ArrayAdapter<String> forecastAdapter;
+//  public static final String LOCATION_QUERY_EXTRA = "lqe";
   private final String LOG_TAG = SunshineService.class.getSimpleName();
+
+
+
 
   public SunshineService() {
     super(SunshineService.class.getSimpleName());
@@ -120,7 +120,7 @@ public class SunshineService extends AbstractIntentService {
     }
 
     try {
-      new JSONParser(context, this).getWeatherDataFromJson(forecastJsonStr, numDays, locationQuery);
+      new JSONParser(this).getWeatherDataFromJson(forecastJsonStr, numDays, locationQuery);
     } catch (JSONException | NullPointerException e) {
       Log.e(LOG_TAG, e.getMessage(), e);
       e.printStackTrace();
@@ -131,7 +131,7 @@ public class SunshineService extends AbstractIntentService {
     Log.v(LOG_TAG, "inserting " + cityName + ", with coord: " + latitude + ", " + longitude);
 
     // First, check if the location with this city name exists in the db
-    Cursor cursor = context.getContentResolver().query(
+    Cursor cursor = this.getContentResolver().query(
       WeatherContract.LocationEntry.CONTENT_URI,
       new String[]{WeatherContract.LocationEntry._ID},
       WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING + " = ?",
@@ -152,7 +152,7 @@ public class SunshineService extends AbstractIntentService {
       locationValues.put(WeatherContract.LocationEntry.COLUMN_COORD_LAT, latitude);
       locationValues.put(WeatherContract.LocationEntry.COLUMN_COORD_LONG, longitude);
 
-      Uri locationInsertUri = context.getContentResolver()
+      Uri locationInsertUri = this.getContentResolver()
         .insert(WeatherContract.LocationEntry.CONTENT_URI, locationValues);
 
       return ContentUris.parseId(locationInsertUri);

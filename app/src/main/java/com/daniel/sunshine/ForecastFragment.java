@@ -9,17 +9,12 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import com.daniel.sunshine.data.WeatherContract;
 import com.daniel.sunshine.service.SunshineService_;
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.*;
 
 import java.util.Date;
 
@@ -28,6 +23,7 @@ import java.util.Date;
  * Encapsulates fetching the forecast and displaying it as a {@link ListView} layout.
  */
 @EFragment(R.layout.fragment_main)
+@OptionsMenu(R.menu.main)
 public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor> {
   @ViewById(R.id.listview_forecast) ListView listView;
 
@@ -76,16 +72,6 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
   }
 
   @Override
-  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    // This prevents creating multiple menus.
-    if (menu.size() > 0) { return; }
-
-    inflater.inflate(R.menu.main, menu);
-
-    super.onCreateOptionsMenu(menu, inflater);
-  }
-
-  @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     // Handle action bar item clicks here.
     // The action bar will automatically handle clicks on the Home/Up button, as long as you specify a parent activity in AndroidManifest.xml.
@@ -105,23 +91,34 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
     return super.onOptionsItemSelected(item);
   }
 
+  @ItemClick(R.id.listview_forecast)
+  void onListViewClick(int position) {
+    Cursor cursor = forecastAdapter.getCursor();
+    if (cursor != null && cursor.moveToPosition(position)) {
+
+      DetailActivity_.intent(getActivity().getApplication())
+        .forecast_date(cursor.getString(COL_WEATHER_DATE))
+        .start();
+    }
+  }
+
   @AfterViews
   void onViewCreated() {
     forecastAdapter = new ForecastAdapter(getActivity(), null, 0);
 
     listView.setAdapter(forecastAdapter);
-    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-      @Override
-      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Cursor cursor = forecastAdapter.getCursor();
-        if (cursor != null && cursor.moveToPosition(position)) {
-          Intent intent = new Intent(getActivity(), DetailActivity.class)
-            .putExtra(DetailActivityFragment.DATE_KEY, cursor.getString(COL_WEATHER_DATE));
-
-          startActivity(intent);
-        }
-      }
-    });
+//    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//      @Override
+//      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//        Cursor cursor = forecastAdapter.getCursor();
+//        if (cursor != null && cursor.moveToPosition(position)) {
+//
+//          DetailActivity_.intent(getActivity().getApplication())
+//            .forecast_date(cursor.getString(COL_WEATHER_DATE))
+//            .start();
+//        }
+//      }
+//    });
   }
 
   @Override

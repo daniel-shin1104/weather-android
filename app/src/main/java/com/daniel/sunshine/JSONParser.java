@@ -17,20 +17,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-/**
- * Created by daniel on 5/27/15.
- */
-
 public class JSONParser {
   private final String LOG_TAG = "sunshine:" + JSONParser.class.getSimpleName();
 
-  private final Context context;
   private final SunshineService sunshineService;
 
   private boolean DEBUG = true;
 
-  public JSONParser(Context context, SunshineService sunshineService) {
-    this.context = context;
+  public JSONParser(SunshineService sunshineService) {
     this.sunshineService = sunshineService;
   }
 
@@ -48,7 +42,7 @@ public class JSONParser {
   /**
    * Prepare the weather high/lows for presentation.
    */
-  private String formatHighLows(double high, double low) {
+  private String formatHighLows(Context context, double high, double low) {
     // Data is fetched in Celsius by default.
     // If user prefers to see in Farenheit, convert the values here.
 
@@ -137,19 +131,19 @@ public class JSONParser {
 
       weatherValuesArray.add(weatherValues);
 
-      String highAndLow = formatHighLows(high, low);
+      String highAndLow = formatHighLows(sunshineService, high, low);
       String day = getReadableDateString(dateTime);
       resultStrs[i] = day + " - " + description + " - " + highAndLow;
     }
 
     if (weatherValuesArray.size() > 0) {
-      int rowsInserted = context.getContentResolver()
+      int rowsInserted = sunshineService.getContentResolver()
         .bulkInsert(WeatherContract.WeatherEntry.CONTENT_URI, weatherValuesArray.toArray(new ContentValues[weatherValuesArray.size()]));
 
       Log.v(LOG_TAG, "inserted " + rowsInserted + " rows of weather data");
 
       if (DEBUG) {
-        Cursor weatherCursor = context.getContentResolver().query(
+        Cursor weatherCursor = sunshineService.getContentResolver().query(
           WeatherContract.WeatherEntry.CONTENT_URI,
           null,
           null,

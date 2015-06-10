@@ -54,8 +54,6 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
   private TextView windView;
   private TextView pressureView;
 
-  @Extra String forecast_date;
-
   public DetailActivityFragment() { setHasOptionsMenu(true); }
 
   @Override
@@ -130,18 +128,20 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
   public Loader<Cursor> onCreateLoader(int id, Bundle args) {
     Log.v(LOG_TAG, "In onCreateLoader");
 
-    Intent intent = getActivity().getIntent();
-    if (intent == null || !intent.hasExtra(DATE_KEY)) {
-      return null;
-    }
+//    Intent intent = getActivity().getIntent();
+//    if (intent == null || !intent.hasExtra(DATE_KEY)) {
+//      return null;
+//    }
 
-    String forecastDate = intent.getStringExtra(DATE_KEY);
+    String forecast_date = ((DetailActivity) getActivity()).forecast_date;
+
+//    String forecastDate = intent.getStringExtra(DATE_KEY);
 
     // Sort order: Ascending, by date.
     String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATETEXT + " ASC";
 
     location = Utility.getPreferredLocation(getActivity());
-    Uri weatherForLocationUri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(location, forecastDate);
+    Uri weatherForLocationUri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(location, forecast_date);
 
     Log.v(LOG_TAG, weatherForLocationUri.toString());
 
