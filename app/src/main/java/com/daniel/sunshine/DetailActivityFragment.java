@@ -54,6 +54,8 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
   private TextView windView;
   private TextView pressureView;
 
+  @Extra String forecast_date;
+
   public DetailActivityFragment() { setHasOptionsMenu(true); }
 
   @Override

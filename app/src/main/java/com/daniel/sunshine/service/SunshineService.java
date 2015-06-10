@@ -3,7 +3,6 @@ package com.daniel.sunshine.service;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
@@ -39,14 +38,6 @@ public class SunshineService extends AbstractIntentService {
 
   @ServiceAction
   void requestWeatherInformation(String locationQuery) {
-
-
-  }
-
-  @Override
-  protected void onHandleIntent(Intent intent) {
-
-    String locationQuery = intent.getStringExtra(LOCATION_QUERY_EXTRA);
 
     // These two need to be declared outside the try/catch
     // so that they can be closed in the finally block.
