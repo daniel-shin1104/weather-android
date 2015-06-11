@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.util.Log;
 import com.daniel.sunshine.JSONParser;
 import com.daniel.sunshine.data.WeatherContract;
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EIntentService;
 import org.androidannotations.annotations.ServiceAction;
 import org.androidannotations.api.support.app.AbstractIntentService;
@@ -25,18 +27,16 @@ import java.net.URL;
 
 @EIntentService
 public class SunshineService extends AbstractIntentService {
-//  private ArrayAdapter<String> forecastAdapter;
-//  public static final String LOCATION_QUERY_EXTRA = "lqe";
   private final String LOG_TAG = SunshineService.class.getSimpleName();
 
-
-
+  @Bean JSONParser jsonParser;
 
   public SunshineService() {
     super(SunshineService.class.getSimpleName());
   }
 
   @ServiceAction
+  @Background
   void requestWeatherInformation(String locationQuery) {
 
     // These two need to be declared outside the try/catch
@@ -77,6 +77,7 @@ public class SunshineService extends AbstractIntentService {
       // Read the input stream into a String
       InputStream inputStream = urlConnection.getInputStream();
       StringBuffer buffer = new StringBuffer();
+
       if (inputStream == null) {
         // Nothing to do.
         return;
@@ -120,7 +121,7 @@ public class SunshineService extends AbstractIntentService {
     }
 
     try {
-      new JSONParser(this).getWeatherDataFromJson(forecastJsonStr, numDays, locationQuery);
+      jsonParser.getWeatherDataFromJson(forecastJsonStr, numDays, locationQuery);
     } catch (JSONException | NullPointerException e) {
       Log.e(LOG_TAG, e.getMessage(), e);
       e.printStackTrace();

@@ -15,20 +15,12 @@ import org.androidannotations.annotations.*;
 
 import java.util.Date;
 
-
-/**
- * Encapsulates fetching the forecast and displaying it as a {@link ListView} layout.
- */
 @EFragment(R.layout.fragment_main)
 @OptionsMenu(R.menu.main)
 public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor> {
   @ViewById(R.id.listview_forecast) ListView listView;
-
-  private final String LOG_TAG = "sunshine:" + ForecastFragment.class.getSimpleName();
-  private ForecastAdapter forecastAdapter;
-
-  private static final int FORECAST_LOADER = 0;
-  private String location;
+  @Bean ForecastAdapter forecastAdapter;
+  @Bean Utility utility;
 
   // For the forecast view we're showing only a small subset of the stored data.
   // Specify the columns we need.
@@ -58,7 +50,9 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
   public static final int COL_COORD_LAT = 7;
   public static final int COL_COORD_LONG = 8;
 
-  public ForecastFragment() {
+  @AfterViews
+  void onViewCreated() {
+    listView.setAdapter(forecastAdapter);
   }
 
   @OptionsItem(R.id.action_refresh)
@@ -68,7 +62,7 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
 
   @OptionsItem(R.id.action_settings)
   void onOptionsActionSettingsSelected() {
-    startActivity(new Intent(getActivity(), SettingsActivity.class));
+    startActivity(new Intent(getActivity(), SettingsActivity_.class));
   }
 
   @ItemClick(R.id.listview_forecast)
@@ -82,34 +76,15 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
     }
   }
 
-  @AfterViews
-  void onViewCreated() {
-    forecastAdapter = new ForecastAdapter(getActivity(), null, 0);
-
-    listView.setAdapter(forecastAdapter);
-//    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//      @Override
-//      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//        Cursor cursor = forecastAdapter.getCursor();
-//        if (cursor != null && cursor.moveToPosition(position)) {
-//
-//          DetailActivity_.intent(getActivity().getApplication())
-//            .forecast_date(cursor.getString(COL_WEATHER_DATE))
-//            .start();
-//        }
-//      }
-//    });
-  }
-
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
-    getLoaderManager().initLoader(FORECAST_LOADER, null, this);
+    getLoaderManager().initLoader(0, null, this);
     super.onActivityCreated(savedInstanceState);
   }
 
   public void updateWeather() {
     SunshineService_.intent(getActivity().getApplication())
-      .requestWeatherInformation(Utility.getPreferredLocation(getActivity()))
+      .requestWeatherInformation(utility.getPreferredLocation())
       .start();
   }
 
@@ -131,7 +106,8 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
     // Sort order: Ascending, by date.
     String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATETEXT + " ASC";
 
-    location = Utility.getPreferredLocation(getActivity());
+    String location = utility.getPreferredLocation();
+
     Uri weatherForLocationUri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(location, startDate);
 
     // Now create and return a CursorLoader that will take care of creating a Cursor for the data being displayed.

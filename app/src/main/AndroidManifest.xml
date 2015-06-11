@@ -28,7 +28,7 @@
         android:value="com.daniel.sunshine.MainActivity" />
     </activity>
     <activity
-      android:name=".SettingsActivity"
+      android:name=".SettingsActivity_"
       android:label="@string/title_activity_settings"
       android:parentActivityName=".MainActivity" >
       <meta-data

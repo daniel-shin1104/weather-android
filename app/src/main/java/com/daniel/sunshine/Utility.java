@@ -1,9 +1,11 @@
 package com.daniel.sunshine;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import com.daniel.sunshine.data.WeatherContract;
+import com.daniel.sunshine.etc.Pref_;
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.RootContext;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -15,37 +17,35 @@ import java.util.Date;
  * Created by daniel on 5/29/15.
  */
 
+@EBean(scope = EBean.Scope.Singleton)
 public class Utility {
-  public static String getPreferredLocation(Context context) {
-    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+  public static final String DATE_FORMAT = "yyyMMdd";
 
-    return prefs.getString(context.getString(R.string.pref_location_key), context.getString(R.string.pref_location_default));
+  @RootContext Context context;
+  @Pref Pref_ pref;
+
+  public String getPreferredLocation() {
+    return pref.location().get();
   }
 
-  public static boolean isCelsius(Context context) {
-    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
-    return prefs.getString(
-      context.getString(R.string.pref_units_key),
-      context.getString(R.string.pref_units_celsius)
-    ).equals(context.getString(R.string.pref_units_celsius));
+  public boolean isCelsius() {
+    return pref.temperatureUnit().get().equals(context.getString(R.string.pref_units_celsius));
   }
 
-  static String formatTemperature(Context context, double temperature, boolean isCelsius) {
+  public String formatTemperature(Context context, double temperature, boolean isCelsius) {
     double temp = isCelsius ? temperature : ((temperature * 9) / 5) + 32;
 
     return context.getString(R.string.format_temperature, temp);
   }
 
-  static String formatDate(String dateString) {
+  public String formatDate(String dateString) {
     Date date = WeatherContract.getDateFromDb(dateString);
     return DateFormat.getDateInstance().format(date);
   }
 
   // Format used for storing dates in the database. Also used for converting those strings back into date objects for comparison/processing.
-  public static final String DATE_FORMAT = "yyyMMdd";
 
-  public static String getFriendlyDayString(Context context, String dateStr) {
+  public String getFriendlyDayString(String dateStr) {
     Date todayDate = new Date();
     String todayStr = WeatherContract.getDbDateString(todayDate);
     Date inputDate = WeatherContract.getDateFromDb(dateStr);
@@ -57,7 +57,7 @@ public class Utility {
       return String.format(context.getString(
         formatId,
         today,
-        getFormattedMonthDay(context, dateStr)
+        getFormattedMonthDay(dateStr)
         ));
     } else {
       Calendar cal = Calendar.getInstance();
@@ -68,7 +68,7 @@ public class Utility {
 
       if (dateStr.compareTo(weekFutureString) < 0) {
         // If the input date is less than a week in the future, just return the day name.
-        return getDayName(context, dateStr);
+        return getDayName(dateStr);
       } else {
         // Otherwise use the form "Mon JUn 3"
         SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("EEE MMM dd");
@@ -77,7 +77,7 @@ public class Utility {
     }
   }
 
-  public static String getDayName(Context context, String dateStr) {
+  public String getDayName(String dateStr) {
     SimpleDateFormat dbDateFormat = new SimpleDateFormat(Utility.DATE_FORMAT);
 
     try {
@@ -112,7 +112,7 @@ public class Utility {
     }
   }
 
-  public static String getFormattedMonthDay(Context context, String dateStr) {
+  public String getFormattedMonthDay(String dateStr) {
     SimpleDateFormat dbDateFormat = new SimpleDateFormat(Utility.DATE_FORMAT);
     try {
       Date inputDate = dbDateFormat.parse(dateStr);
@@ -126,9 +126,9 @@ public class Utility {
     }
   }
 
-  public static String getFormattedWind(Context context, float windSpeed, float degrees) {
+  public String getFormattedWind(float windSpeed, float degrees) {
     int windFormat;
-    if (isCelsius(context)) {
+    if (isCelsius()) {
       windFormat = R.string.format_wind_kmh;
     } else {
       windFormat = R.string.format_wind_mph;
@@ -157,7 +157,7 @@ public class Utility {
     return context.getString(windFormat, windSpeed, direction);
   }
 
-  public static int getIconResourceFromWeatherCondition(int weatherId) {
+  public int getIconResourceFromWeatherCondition(int weatherId) {
     if (weatherId >= 200 && weatherId <= 232) {
       return R.drawable.ic_storm;
     } else if (weatherId >= 300 && weatherId <= 321) {
@@ -184,7 +184,7 @@ public class Utility {
     return -1;
   }
 
-  public static int getArtResourceForWeatherCondition(int weatherId) {
+  public int getArtResourceForWeatherCondition(int weatherId) {
     if (weatherId >= 200 && weatherId <= 232) {
       return R.drawable.art_storm;
     } else if (weatherId >= 300 && weatherId <= 321) {

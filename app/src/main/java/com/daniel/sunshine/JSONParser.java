@@ -2,13 +2,15 @@ package com.daniel.sunshine;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import com.daniel.sunshine.data.WeatherContract;
+import com.daniel.sunshine.etc.Pref_;
 import com.daniel.sunshine.service.SunshineService;
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.RootContext;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,16 +19,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+@EBean
 public class JSONParser {
+  @RootContext SunshineService sunshineService;
+  @Pref Pref_ pref;
+
   private final String LOG_TAG = "sunshine:" + JSONParser.class.getSimpleName();
 
-  private final SunshineService sunshineService;
-
   private boolean DEBUG = true;
-
-  public JSONParser(SunshineService sunshineService) {
-    this.sunshineService = sunshineService;
-  }
 
   /* The date/time conversion code is going to be moved outside the asynctask later,
  * so for convenience we're breaking it out into its own method now.
@@ -43,16 +43,9 @@ public class JSONParser {
    * Prepare the weather high/lows for presentation.
    */
   private String formatHighLows(Context context, double high, double low) {
-    // Data is fetched in Celsius by default.
-    // If user prefers to see in Farenheit, convert the values here.
+    String temperatureUnit = pref.temperatureUnit().get();
 
-    SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-    String unitType = sharedPrefs.getString(
-      context.getString(R.string.pref_units_key),
-      context.getString(R.string.pref_units_celsius)
-    );
-
-    if (unitType.equals(context.getString(R.string.pref_units_farenheit))) {
+    if (temperatureUnit.equals(context.getString(R.string.pref_units_farenheit))) {
       high = (high * 1.8) + 32;
       low = (low * 1.8) + 32;
     }

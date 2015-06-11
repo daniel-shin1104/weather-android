@@ -1,16 +1,17 @@
 package com.daniel.sunshine;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import com.daniel.sunshine.etc.Pref_;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
+  @Pref Pref_ pref;
   private final String LOG_TAG = "sunshine:" + MainActivity.class.getSimpleName();
 
   @Override
@@ -21,12 +22,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   public void openPreferredLocationInMap() {
-    SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-    String location = sharedPrefs.getString(
-      getString(R.string.pref_location_key),
-      getString(R.string.pref_location_default)
-    );
+    String location = pref.location().get();
 
     Uri geoLocation = Uri.parse("geo:0,0?").buildUpon()
       .appendQueryParameter("q", location)

@@ -8,15 +8,16 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EBean;
 
-/**
- * Created by daniel on 6/7/15.
- */
-
+@EBean
 public class ForecastAdapter extends CursorAdapter {
   private static final int VIEW_TYPE_COUNT = 2;
   private static final int VIEW_TYPE_TODAY = 0;
   private static final int VIEW_TYPE_FUTURE_DAY = 1;
+  
+  @Bean Utility utility;
 
   public static class ViewHolder {
     public final ImageView iconView;
@@ -34,8 +35,8 @@ public class ForecastAdapter extends CursorAdapter {
     }
   }
 
-  public ForecastAdapter(Context context, Cursor c, int flags) {
-    super(context, c, flags);
+  public ForecastAdapter(Context context) {
+    super(context, null, 0);
   }
 
   @Override
@@ -73,23 +74,25 @@ public class ForecastAdapter extends CursorAdapter {
     int viewType = getItemViewType(cursor.getPosition());
     switch (viewType) {
       case VIEW_TYPE_TODAY:
-        viewHolder.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(
+        viewHolder.iconView.setImageResource(utility.getArtResourceForWeatherCondition(
           cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)
         ));
         break;
 
       case VIEW_TYPE_FUTURE_DAY:
-        viewHolder.iconView.setImageResource(Utility.getIconResourceFromWeatherCondition(
+        viewHolder.iconView.setImageResource(utility.getIconResourceFromWeatherCondition(
           cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)
         ));
         break;
+
+      default: break;
     }
 
     // Read data from cursor
     String dateString = cursor.getString(ForecastFragment.COL_WEATHER_DATE);
 
     // Find TextView and set formatted date on it
-    viewHolder.dateView.setText(Utility.getFriendlyDayString(context, dateString));
+    viewHolder.dateView.setText(utility.getFriendlyDayString(dateString));
 
     // Read weather forecast from cursor
     String description = cursor.getString(ForecastFragment.COL_WEATHER_DESC);
@@ -98,15 +101,15 @@ public class ForecastAdapter extends CursorAdapter {
     viewHolder.descriptionView.setText(description);
 
     // Read user preference for temp unit
-    boolean isCelsius = Utility.isCelsius(context);
+    boolean isCelsius = utility.isCelsius();
 
     // Read high temperature from cursor
     double high = cursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP);
-    viewHolder.highTempView.setText(Utility.formatTemperature(context, high, isCelsius));
+    viewHolder.highTempView.setText(utility.formatTemperature(context, high, isCelsius));
 
     // Read low temperature from cursor
     double low = cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP);
-    viewHolder.lowTempView.setText(Utility.formatTemperature(context, low, isCelsius));
+    viewHolder.lowTempView.setText(utility.formatTemperature(context, low, isCelsius));
   }
 
   @Override
