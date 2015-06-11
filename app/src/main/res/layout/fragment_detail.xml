@@ -1,5 +1,6 @@
 <ScrollView
   xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   >
@@ -21,6 +22,7 @@
       android:fontFamily="sans-serif-condensed"
       android:textColor="@color/black"
       android:textSize="24sp"
+      tools:text="Today"
       />
 
     <TextView
@@ -28,8 +30,9 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:fontFamily="sans-serif-condensed"
-      android:textColor="@color/grey_700"
+      android:textColor="@color/grey_dark"
       android:textSize="16sp"
+      tools:text="October 04"
       />
 
     <!-- Main Content: high, low, art, weather state -->
@@ -54,6 +57,7 @@
           android:layout_height="wrap_content"
           android:fontFamily="sans-serif-light"
           android:textSize="96sp"
+          tools:text="16\u00B0"
           />
 
         <TextView
@@ -61,8 +65,9 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="center_horizontal"
-          android:textColor="@color/grey_700"
+          android:textColor="@color/grey_dark"
           android:textSize="48sp"
+          tools:text="14\u00B0"
           />
 
       </LinearLayout>
@@ -79,6 +84,7 @@
           android:id="@+id/detail_icon"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          tools:src="@drawable/art_clear"
           />
 
         <TextView
@@ -86,7 +92,8 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:textAppearance="?android:textAppearanceLarge"
-          android:textColor="@color/grey_700"
+          android:textColor="@color/grey_dark"
+          tools:text="Clear"
           />
 
       </LinearLayout>
@@ -106,6 +113,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:textAppearanceLarge"
+        tools:text="Humidity: 80%"
         />
 
       <TextView
@@ -114,6 +122,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:textAppearance="?android:textAppearanceLarge"
+        tools:text="Wind: 1 km/h NW"
         />
 
       <TextView
@@ -122,6 +131,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:textAppearance="?android:textAppearanceLarge"
+        tools:text="Pressure: 988 hPa"
         />
 
     </LinearLayout>
