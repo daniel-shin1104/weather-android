@@ -13,10 +13,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * Created by daniel on 5/29/15.
- */
-
 @EBean(scope = EBean.Scope.Singleton)
 public class Utility {
   public static final String DATE_FORMAT = "yyyMMdd";
