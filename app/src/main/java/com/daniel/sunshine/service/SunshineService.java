@@ -120,6 +120,8 @@ public class SunshineService extends AbstractIntentService {
       }
     }
 
+
+
     try {
       jsonParser.getWeatherDataFromJson(forecastJsonStr, numDays, locationQuery);
     } catch (JSONException | NullPointerException e) {

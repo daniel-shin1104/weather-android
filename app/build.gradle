@@ -66,6 +66,12 @@ dependencies {
 
   // ActiveAndroid
   compile "com.michaelpardo:activeandroid:3.1.0-SNAPSHOT"
+
+  // Retrofit
+  compile "com.squareup.retrofit:retrofit:1.9.0"
+
+  // Jackson
+  compile "com.fasterxml.jackson.core:jackson-core:2.5.4"
 }
 
 // Custom Hooks for android plugin tasks.
