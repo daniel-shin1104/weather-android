@@ -1,14 +1,11 @@
 package com.daniel.sunshine.service;
 
-import android.content.ContentUris;
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.net.Uri;
-import android.util.Log;
+import com.activeandroid.ActiveAndroid;
 import com.daniel.sunshine.JSONParser;
-import com.daniel.sunshine.data.WeatherContract;
 import com.daniel.sunshine.http.RestClient;
 import com.daniel.sunshine.http.WeatherResponse;
+import com.daniel.sunshine.persistence.Location;
+import com.daniel.sunshine.persistence.Weather;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EIntentService;
@@ -42,7 +39,36 @@ public class SunshineService extends AbstractIntentService {
       public void success(WeatherResponse weatherResponse, Response response) {
         weatherResponse.printAll();
 
+        ActiveAndroid.beginTransaction();
+        try {
+          // Persist Location
+          Location location = new Location();
+          location.city_name = weatherResponse.city.name;
+          location.coord_lat = weatherResponse.city.coord.lat;
+          location.coord_lon = weatherResponse.city.coord.lon;
+          location.save();
 
+          for (WeatherResponse._List item : weatherResponse.list) {
+
+            // Persist Weather
+            Weather weather = new Weather();
+            weather.weather_id = item.weather.get(0).id;
+            weather.location = location;
+            weather.date = item.dt;
+            weather.short_description = item.weather.get(0).main;
+            weather.temperature_min = item.temp.min;
+            weather.temperature_max = item.temp.max;
+            weather.humidity = item.humidity;
+            weather.pressure = item.pressure;
+            weather.wind = item.speed;
+            weather.degrees = item.deg;
+            weather.save();
+          }
+          ActiveAndroid.setTransactionSuccessful();
+        }
+        finally {
+          ActiveAndroid.endTransaction();
+        }
       }
 
       @Override
@@ -50,37 +76,5 @@ public class SunshineService extends AbstractIntentService {
         error.printStackTrace();
       }
     });
-  }
-
-  public long addLocation(String locationSetting, String cityName, double latitude, double longitude) {
-    Log.v(LOG_TAG, "inserting " + cityName + ", with coord: " + latitude + ", " + longitude);
-
-    // First, check if the location with this city name exists in the db
-    Cursor cursor = this.getContentResolver().query(
-      WeatherContract.LocationEntry.CONTENT_URI,
-      new String[]{WeatherContract.LocationEntry._ID},
-      WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING + " = ?",
-      new String[]{locationSetting},
-      null
-    );
-
-    if (cursor.moveToFirst()) {
-      Log.v(LOG_TAG, "Found it in the database");
-      int locationIdIndex = cursor.getColumnIndex(WeatherContract.LocationEntry._ID);
-      return cursor.getLong(locationIdIndex);
-    } else {
-      Log.v(LOG_TAG, "Didn't find it in the database, inserting now!");
-
-      ContentValues locationValues = new ContentValues();
-      locationValues.put(WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING, locationSetting);
-      locationValues.put(WeatherContract.LocationEntry.COLUMN_CITY_NAME, cityName);
-      locationValues.put(WeatherContract.LocationEntry.COLUMN_COORD_LAT, latitude);
-      locationValues.put(WeatherContract.LocationEntry.COLUMN_COORD_LONG, longitude);
-
-      Uri locationInsertUri = this.getContentResolver()
-        .insert(WeatherContract.LocationEntry.CONTENT_URI, locationValues);
-
-      return ContentUris.parseId(locationInsertUri);
-    }
   }
 }

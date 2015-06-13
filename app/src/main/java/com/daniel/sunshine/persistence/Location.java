@@ -10,8 +10,8 @@ import java.util.List;
 public class Location extends Model {
   @Column public String location_setting;
   @Column public String city_name;
-  @Column public String coord_lat;
-  @Column public String coord_long;
+  @Column public double coord_lat;
+  @Column public double coord_lon;
 
   // This method is optional. Doesn't affect the foreign key creation.
   public List<Weather> getManyWeathers() {
