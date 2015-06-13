@@ -1,5 +1,6 @@
 package com.daniel.sunshine.persistence;
 
+import android.provider.BaseColumns;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -7,7 +8,7 @@ import com.activeandroid.query.Select;
 
 import java.util.List;
 
-@Table(name = "OpenWeatherMap")
+@Table(name = "Weather", id = BaseColumns._ID)
 public class Weather extends Model {
   @Column(index = true) public int weather_id;
   @Column public Location location;
@@ -41,5 +42,33 @@ public class Weather extends Model {
       ", wind=" + wind +
       ", degrees=" + degrees +
       '}';
+  }
+
+  public static enum Columns {
+    WEATHER_ID,
+    LOCATION,
+    DATE,
+    SHORT_DESCRIPTION,
+    TEMPERATURE_MIN,
+    TEMPERATURE_MAX,
+    HUMIDITY,
+    PRESSURE,
+    WIND,
+    DEGREES;
+
+    public String columnName;
+
+    static {
+      WEATHER_ID.columnName = "weather_id";
+      LOCATION.columnName = "location";
+      DATE.columnName = "date";
+      SHORT_DESCRIPTION.columnName = "short_description";
+      TEMPERATURE_MIN.columnName = "temperature_min";
+      TEMPERATURE_MAX.columnName = "temperature_max";
+      HUMIDITY.columnName = "humidity";
+      PRESSURE.columnName = "pressure";
+      WIND.columnName = "wind";
+      DEGREES.columnName = "degrees";
+    }
   }
 }

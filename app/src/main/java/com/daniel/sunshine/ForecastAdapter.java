@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.daniel.sunshine.persistence.Weather;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 
@@ -19,6 +20,7 @@ public class ForecastAdapter extends CursorAdapter {
   
   @Bean Utility utility;
 
+  // TODO: Use annotations
   public static class ViewHolder {
     public final ImageView iconView;
     public final TextView dateView;
@@ -71,44 +73,36 @@ public class ForecastAdapter extends CursorAdapter {
 
     ViewHolder viewHolder = (ViewHolder) view.getTag();
 
+    // Read data from cursor
+    int weatherId = cursor.getColumnIndex(Weather.Columns.WEATHER_ID.columnName);
+    long date = cursor.getLong(cursor.getColumnIndex(Weather.Columns.DATE.columnName));
+    String description = cursor.getString(cursor.getColumnIndex(Weather.Columns.SHORT_DESCRIPTION.columnName));
+    double high = cursor.getDouble(cursor.getColumnIndex(Weather.Columns.TEMPERATURE_MAX.columnName));
+    double low = cursor.getDouble(cursor.getColumnIndex(Weather.Columns.TEMPERATURE_MIN.columnName));
+
     int viewType = getItemViewType(cursor.getPosition());
     switch (viewType) {
       case VIEW_TYPE_TODAY:
         viewHolder.iconView.setImageResource(utility.getArtResourceForWeatherCondition(
-          cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)
+          cursor.getInt(weatherId)
         ));
         break;
 
       case VIEW_TYPE_FUTURE_DAY:
         viewHolder.iconView.setImageResource(utility.getIconResourceFromWeatherCondition(
-          cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)
+          cursor.getInt(weatherId)
         ));
         break;
 
       default: break;
     }
 
-    // Read data from cursor
-    String dateString = cursor.getString(ForecastFragment.COL_WEATHER_DATE);
-
-    // Find TextView and set formatted date on it
-    viewHolder.dateView.setText(utility.getFriendlyDayString(dateString));
-
-    // Read weather forecast from cursor
-    String description = cursor.getString(ForecastFragment.COL_WEATHER_DESC);
-
-    // Find TextView and set weather forecast on it.
+    // FIXME: this method needs to accept long not String
+    viewHolder.dateView.setText(utility.getFriendlyDayString(String.valueOf(date)));
     viewHolder.descriptionView.setText(description);
 
-    // Read user preference for temp unit
     boolean isCelsius = utility.isCelsius();
-
-    // Read high temperature from cursor
-    double high = cursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP);
     viewHolder.highTempView.setText(utility.formatTemperature(context, high, isCelsius));
-
-    // Read low temperature from cursor
-    double low = cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP);
     viewHolder.lowTempView.setText(utility.formatTemperature(context, low, isCelsius));
   }
 

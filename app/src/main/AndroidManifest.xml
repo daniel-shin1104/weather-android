@@ -60,9 +60,14 @@
     </activity>
 
     <!-- OpenWeatherMap Provider -->
+    <!--<provider-->
+      <!--android:authorities="com.daniel.sunshine"-->
+      <!--android:name=".data.WeatherProvider"-->
+      <!--android:exported="false"-->
+      <!--/>-->
     <provider
       android:authorities="com.daniel.sunshine"
-      android:name=".data.WeatherProvider"
+      android:name="com.activeandroid.content.ContentProvider"
       android:exported="false"
       />
 
