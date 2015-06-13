@@ -1,12 +1,13 @@
 package com.daniel.sunshine.persistence;
 
+import android.provider.BaseColumns;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
 import java.util.List;
 
-@Table(name = "Location")
+@Table(name = "Location", id = BaseColumns._ID)
 public class Location extends Model {
   @Column public String location_setting;
   @Column public String city_name;

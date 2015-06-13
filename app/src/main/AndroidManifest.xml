@@ -63,6 +63,7 @@
     <provider
       android:authorities="com.daniel.sunshine"
       android:name=".data.WeatherProvider"
+      android:exported="false"
       />
 
     <!-- SunshineService -->

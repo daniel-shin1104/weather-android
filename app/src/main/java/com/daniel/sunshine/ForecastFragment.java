@@ -94,19 +94,13 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
     updateWeather();
   }
 
+  ////////////////////////////////////////////
+  // CURSOR_LOADER CALLBACKS
+  ////////////////////////////////////////////
   @Override
   public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-    // This is called when a new Loader needs to be created. This fragment only uses one loader, so we don't care about checking the id.
-
-    // To only show current and future dates, get thet String representation for today
-    // and filter the query to return whether only for dates after or including today
-    // Only return date after today
-    String startDate = WeatherContract.getDbDateString(new Date());
-
-    // Sort order: Ascending, by date.
-    String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATETEXT + " ASC";
-
     String location = utility.getPreferredLocation();
+    String startDate = WeatherContract.getDbDateString(new Date());
 
     Uri weatherForLocationUri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(location, startDate);
 
@@ -117,7 +111,7 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
       FORECAST_COLUMNS,
       null,
       null,
-      sortOrder
+      WeatherContract.WeatherEntry.COLUMN_DATETEXT + " ASC"
     );
   }
 

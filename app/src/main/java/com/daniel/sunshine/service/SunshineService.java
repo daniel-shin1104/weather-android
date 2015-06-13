@@ -1,13 +1,11 @@
 package com.daniel.sunshine.service;
 
 import com.activeandroid.ActiveAndroid;
-import com.daniel.sunshine.JSONParser;
 import com.daniel.sunshine.http.RestClient;
 import com.daniel.sunshine.http.WeatherResponse;
 import com.daniel.sunshine.persistence.Location;
 import com.daniel.sunshine.persistence.Weather;
 import org.androidannotations.annotations.Background;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EIntentService;
 import org.androidannotations.annotations.ServiceAction;
 import org.androidannotations.api.support.app.AbstractIntentService;
@@ -15,15 +13,9 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-/**
- * Created by daniel on 6/8/15.
- */
-
 @EIntentService
 public class SunshineService extends AbstractIntentService {
   private final String LOG_TAG = SunshineService.class.getSimpleName();
-
-  @Bean JSONParser jsonParser;
 
   public SunshineService() {
     super(SunshineService.class.getSimpleName());
