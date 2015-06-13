@@ -98,7 +98,7 @@ public class ForecastAdapter extends CursorAdapter {
     }
 
     // FIXME: this method needs to accept long not String
-    viewHolder.dateView.setText(utility.getFriendlyDayString(String.valueOf(date)));
+    viewHolder.dateView.setText(utility.getFriendlyDayString(date));
     viewHolder.descriptionView.setText(description);
 
     boolean isCelsius = utility.isCelsius();

@@ -41,10 +41,10 @@ public class Utility {
 
   // Format used for storing dates in the database. Also used for converting those strings back into date objects for comparison/processing.
 
-  public String getFriendlyDayString(String dateStr) {
+  public String getFriendlyDayString(long date) {
     Date todayDate = new Date();
     String todayStr = WeatherContract.getDbDateString(todayDate);
-    Date inputDate = WeatherContract.getDateFromDb(dateStr);
+    Date inputDate = new Date(date * 1000);
 
     // if the date we're building the String for is today's date, the format is "Today, June 24"
     if (todayStr.equals(dateStr)) {
@@ -73,84 +73,68 @@ public class Utility {
     }
   }
 
-  public String getDayName(String dateStr) {
-    SimpleDateFormat dbDateFormat = new SimpleDateFormat(Utility.DATE_FORMAT);
+  public String getDayName(long date) {
+    Date inputDate = new Date(date * 1000);
+    Date todayDate = new Date();
 
-    try {
-      Date inputDate = dbDateFormat.parse(dateStr);
-      Date todayDate = new Date();
+    // TODO: START FROM HERE!!!!!!
+    // If the date is today, return the localized version of "Today" instead of the actual day name.
+    if (WeatherContract.getDbDateString(todayDate).equals(dateStr)) {
+      return context.getString(R.string.today);
+    } else {
+      Calendar cal = Calendar.getInstance();
+      cal.setTime(todayDate);
+      cal.add(Calendar.DATE, 1);
 
-      // If the date is today, return the localized version of "Today" instead of the actual day name.
-      if (WeatherContract.getDbDateString(todayDate).equals(dateStr)) {
-        return context.getString(R.string.today);
+      Date tomorrowDate = cal.getTime();
+
+      // If the date is set for tomorrow, the format is "Tomorrow"
+      if (WeatherContract.getDbDateString(tomorrowDate).equals(dateStr)) {
+        return context.getString(R.string.tomorrow);
+
+      // Otherwise the format is just the day of the week
       } else {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(todayDate);
-        cal.add(Calendar.DATE, 1);
-
-        Date tomorrowDate = cal.getTime();
-
-        // If the date is set for tomorrow, the format is "Tomorrow"
-        if (WeatherContract.getDbDateString(tomorrowDate).equals(dateStr)) {
-          return context.getString(R.string.tomorrow);
-
-        // Otherwise the format is just the day of the week
-        } else {
-          SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE");
-          return dayFormat.format(inputDate);
-        }
+        SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE");
+        return dayFormat.format(inputDate);
       }
-    } catch (ParseException e) {
-      e.printStackTrace();;
-
-      // It couldn't process the date correctly.
-      return "";
     }
   }
 
-  public String getFormattedMonthDay(String dateStr) {
-    SimpleDateFormat dbDateFormat = new SimpleDateFormat(Utility.DATE_FORMAT);
-    try {
-      Date inputDate = dbDateFormat.parse(dateStr);
-      SimpleDateFormat monthDayFormat = new SimpleDateFormat("MMMM dd");
-      return monthDayFormat.format(inputDate);
-
-    } catch (ParseException e) {
-      e.printStackTrace();;
-      return null;
-
-    }
+  public String getFormattedMonthDay(long date) {
+    Date inputDate = new Date(date * 1000);
+    SimpleDateFormat monthDayFormat = new SimpleDateFormat("MMMM dd");
+    return monthDayFormat.format(inputDate);
   }
 
-  public String getFormattedWind(float windSpeed, float degrees) {
+  public String getFormattedWind(double wind_speed, double wind_degrees) {
     int windFormat;
     if (isCelsius()) {
       windFormat = R.string.format_wind_kmh;
     } else {
       windFormat = R.string.format_wind_mph;
-      windSpeed = .621371192237334f * windSpeed;
+      wind_speed = .621371192237334f * wind_speed;
     }
 
     String direction = "Unknown";
-    if (degrees >= 337.5 || degrees < 22.5) {
+    if (wind_degrees >= 337.5 || wind_degrees < 22.5) {
       direction = "N";
-    } else if (degrees >= 22.5 && degrees < 67.5) {
+    } else if (wind_degrees >= 22.5 && wind_degrees < 67.5) {
       direction = "NE";
-    } else if (degrees >= 67.5 && degrees < 112.5) {
+    } else if (wind_degrees >= 67.5 && wind_degrees < 112.5) {
       direction = "E";
-    } else if (degrees >= 112.5 && degrees < 157.5) {
+    } else if (wind_degrees >= 112.5 && wind_degrees < 157.5) {
       direction = "SE";
-    } else if (degrees >= 157.5 && degrees < 202.5) {
+    } else if (wind_degrees >= 157.5 && wind_degrees < 202.5) {
       direction = "S";
-    } else if (degrees >= 202.5 && degrees < 247.5) {
+    } else if (wind_degrees >= 202.5 && wind_degrees < 247.5) {
       direction = "SW";
-    } else if (degrees >= 247.5 && degrees < 292.5) {
+    } else if (wind_degrees >= 247.5 && wind_degrees < 292.5) {
       direction = "W";
-    } else if (degrees >= 292.5 || degrees < 22.5) {
+    } else if (wind_degrees >= 292.5 || wind_degrees < 22.5) {
       direction = "NW";
     }
 
-    return context.getString(windFormat, windSpeed, direction);
+    return context.getString(windFormat, wind_speed, direction);
   }
 
   public int getIconResourceFromWeatherCondition(int weatherId) {

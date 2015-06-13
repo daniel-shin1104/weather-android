@@ -52,8 +52,8 @@ public class SunshineService extends AbstractIntentService {
             weather.temperature_max = item.temp.max;
             weather.humidity = item.humidity;
             weather.pressure = item.pressure;
-            weather.wind = item.speed;
-            weather.degrees = item.deg;
+            weather.wind_speed = item.speed;
+            weather.wind_degrees = item.deg;
             weather.save();
           }
           ActiveAndroid.setTransactionSuccessful();

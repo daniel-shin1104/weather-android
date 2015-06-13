@@ -6,7 +6,10 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @Table(name = "Weather", id = BaseColumns._ID)
 public class Weather extends Model {
@@ -18,8 +21,8 @@ public class Weather extends Model {
   @Column public double temperature_max;
   @Column public int humidity;
   @Column public double pressure;
-  @Column public double wind;
-  @Column public double degrees;
+  @Column public double wind_speed;
+  @Column public double wind_degrees;
 
   public static List<Weather> getAll() {
     return new Select()
@@ -53,8 +56,8 @@ public class Weather extends Model {
     TEMPERATURE_MAX,
     HUMIDITY,
     PRESSURE,
-    WIND,
-    DEGREES;
+    WIND_SPEED,
+    WIND_DEGREES;
 
     public String columnName;
 
@@ -67,8 +70,16 @@ public class Weather extends Model {
       TEMPERATURE_MAX.columnName = "temperature_max";
       HUMIDITY.columnName = "humidity";
       PRESSURE.columnName = "pressure";
-      WIND.columnName = "wind";
-      DEGREES.columnName = "degrees";
+      WIND_SPEED.columnName = "wind_speed";
+      WIND_DEGREES.columnName = "wind_degrees";
     }
+  }
+
+  public String getFormattedDateString() {
+    return (new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH)).format(new Date(date * 1000));
+  }
+
+  public Date getDate() {
+    return new Date(date * 1000);
   }
 }

@@ -1,10 +1,7 @@
 package com.daniel.sunshine;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import com.daniel.sunshine.etc.Pref_;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.sharedpreferences.Pref;
@@ -21,21 +18,22 @@ public class MainActivity extends AppCompatActivity {
     getSupportActionBar().setElevation(0f);
   }
 
-  public void openPreferredLocationInMap() {
-    String location = pref.location().get();
+//  public void openPreferredLocationInMap() {
+//    String location = pref.location().get();
+//
+//    Uri geoLocation = Uri.parse("geo:0,0?").buildUpon()
+//      .appendQueryParameter("q", location)
+//      .build();
+//
+//    Intent intent = new Intent(Intent.ACTION_VIEW);
+//    intent.setData(geoLocation);
+//
+//    if (intent.resolveActivity(getPackageManager()) != null) {
+//      startActivity(intent);
+//    } else {
+//      Log.d(LOG_TAG, "Couldn't call " + location);
+//    }
+//  }
 
-    Uri geoLocation = Uri.parse("geo:0,0?").buildUpon()
-      .appendQueryParameter("q", location)
-      .build();
-
-    Intent intent = new Intent(Intent.ACTION_VIEW);
-    intent.setData(geoLocation);
-
-    if (intent.resolveActivity(getPackageManager()) != null) {
-      startActivity(intent);
-    } else {
-      Log.d(LOG_TAG, "Couldn't call " + location);
-    }
-  }
 
 }
