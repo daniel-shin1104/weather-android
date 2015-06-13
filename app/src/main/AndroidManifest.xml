@@ -59,7 +59,7 @@
         />
     </activity>
 
-    <!-- Weather Provider -->
+    <!-- OpenWeatherMap Provider -->
     <provider
       android:authorities="com.daniel.sunshine"
       android:name=".data.WeatherProvider"

@@ -90,7 +90,7 @@ public class JSONParser {
       // Get the JSON object representing the day
       JSONObject dayForecast = weatherArray.getJSONObject(i);
 
-      /* Weather Information */
+      /* OpenWeatherMap Information */
       long dateTime = dayForecast.getLong("dt");
       double pressure = dayForecast.getDouble("pressure");
       int humidity = dayForecast.getInt("humidity");

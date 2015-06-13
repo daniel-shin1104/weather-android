@@ -4,7 +4,7 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-@Table(name = "Weather")
+@Table(name = "OpenWeatherMap")
 public class Weather extends Model {
   @Column(index = true) public String weather_id;
   @Column public Location location;
