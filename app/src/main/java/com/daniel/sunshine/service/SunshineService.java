@@ -1,5 +1,7 @@
 package com.daniel.sunshine.service;
 
+import android.location.Criteria;
+import android.location.LocationManager;
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Delete;
 import com.daniel.sunshine.http.RestClient;
@@ -9,18 +11,23 @@ import com.daniel.sunshine.persistence.Weather;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EIntentService;
 import org.androidannotations.annotations.ServiceAction;
+import org.androidannotations.annotations.SystemService;
 import org.androidannotations.api.support.app.AbstractIntentService;
 
 @EIntentService
 public class SunshineService extends AbstractIntentService {
+  @SystemService LocationManager locationManager;
+
   public SunshineService() {
     super(SunshineService.class.getSimpleName());
   }
 
   @ServiceAction
   @Background
-  void requestWeatherInformation(String locationQuery) {
-    RestClient.get().getForecast(locationQuery)
+  void requestWeatherInformation() {
+    android.location.Location loc = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), true));
+
+    RestClient.get().getForecast(loc.getLatitude(), loc.getLongitude())
       .subscribe(weatherResponse -> {
         weatherResponse.printAll();
 

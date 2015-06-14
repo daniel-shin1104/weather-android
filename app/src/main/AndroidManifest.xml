@@ -7,6 +7,7 @@
   <!-- User Permissions -->
   <!-- This permission is necessary in order for Sunshine to perform network access -->
   <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
   <!-- Application Configuration -->
   <application

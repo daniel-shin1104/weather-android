@@ -6,9 +6,6 @@ import org.androidannotations.annotations.sharedpreferences.SharedPref;
 
 @SharedPref(value = SharedPref.Scope.UNIQUE)
 public interface Pref {
-  @DefaultRes(R.string.pref_location_default)
-  String location();
-
   @DefaultRes(R.string.pref_units_celsius)
   String temperatureUnit();
 }

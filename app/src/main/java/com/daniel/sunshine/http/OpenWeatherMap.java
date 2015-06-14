@@ -7,6 +7,7 @@ import rx.Observable;
 public interface OpenWeatherMap {
   @GET("/forecast/daily?units=metric")
   Observable<WeatherResponse> getForecast(
-    @Query("q") String location
+    @Query("lat") double lat,
+    @Query("lon") double lon
   );
 }

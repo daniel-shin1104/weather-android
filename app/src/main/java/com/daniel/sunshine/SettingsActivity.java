@@ -9,14 +9,12 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 @EActivity
 @PreferenceScreen(R.xml.pref_general)
 public class SettingsActivity extends PreferenceActivity {
-  @PreferenceByKey(R.string.pref_location_key) Preference locationPreference;
   @PreferenceByKey(R.string.pref_units_key) Preference temperatureUnitPreference;
 
   @Pref Pref_ pref;
 
   @AfterPreferences
   void initPrefs() {
-    locationPreference.setSummary(pref.location().get());
     temperatureUnitPreference.setSummary(pref.temperatureUnit().get());
   }
 

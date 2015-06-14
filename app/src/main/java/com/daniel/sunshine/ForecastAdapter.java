@@ -9,6 +9,7 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.daniel.sunshine.persistence.Weather;
+import com.google.common.base.Optional;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 
@@ -35,14 +36,15 @@ public class ForecastAdapter extends CursorAdapter {
 
     static int getLength() { return ViewType.values().length; }
 
-    static ViewType fromViewTypeIndex(int viewTypeIndex) {
+    static Optional<ViewType> fromViewTypeIndex(int viewTypeIndex) {
       for (ViewType viewType : ViewType.values()) {
         if (viewType.viewTypeIndex == viewTypeIndex) {
-          return viewType;
+
+          return Optional.of(viewType);
         }
       }
-      // TODO: use optional
-      throw new IllegalArgumentException("Invalid Value for Enum");
+
+      return Optional.absent();
     }
   }
   
@@ -69,7 +71,9 @@ public class ForecastAdapter extends CursorAdapter {
   @Override
   public View newView(Context context, Cursor cursor, ViewGroup parent) {
     int viewTypeIndex = getItemViewType(cursor.getPosition());
-    int layoutId = ViewType.fromViewTypeIndex(viewTypeIndex).getLayoutId();
+
+    Optional<ViewType> viewType = ViewType.fromViewTypeIndex(viewTypeIndex);
+    int layoutId = viewType.isPresent() ? viewType.get().getLayoutId() : -1;
 
     View view = LayoutInflater.from(context).inflate(layoutId, parent, false);
 
@@ -92,8 +96,10 @@ public class ForecastAdapter extends CursorAdapter {
     double low = cursor.getDouble(cursor.getColumnIndex(Weather.Columns.TEMPERATURE_MIN.columnName));
 
     int viewTypeIndex = getItemViewType(cursor.getPosition());
-    ViewType viewType = ViewType.fromViewTypeIndex(viewTypeIndex);
-    switch (viewType) {
+    Optional<ViewType> viewType = ViewType.fromViewTypeIndex(viewTypeIndex);
+    if (!viewType.isPresent()) { throw new NullPointerException(); }
+
+    switch (viewType.get()) {
       case TODAY:
         viewHolder.iconView.setImageResource(utility.getArtResourceForWeatherCondition(
           cursor.getInt(weatherId)

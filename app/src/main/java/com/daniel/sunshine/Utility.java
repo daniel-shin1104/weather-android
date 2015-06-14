@@ -12,10 +12,6 @@ public class Utility {
   @RootContext Context context;
   @Pref Pref_ pref;
 
-  public String getPreferredLocation() {
-    return pref.location().get();
-  }
-
   public boolean isCelsius() {
     return pref.temperatureUnit().get().equals(context.getString(R.string.pref_units_celsius));
   }

@@ -61,7 +61,7 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
 
   public void updateWeather() {
     SunshineService_.intent(getActivity().getApplication())
-      .requestWeatherInformation(utility.getPreferredLocation())
+      .requestWeatherInformation()
       .start();
   }
 
