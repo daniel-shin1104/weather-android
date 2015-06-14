@@ -1,22 +1,14 @@
 package com.daniel.sunshine;
 
 import android.content.Context;
-import com.daniel.sunshine.data.WeatherContract;
 import com.daniel.sunshine.etc.Pref_;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 import org.androidannotations.annotations.sharedpreferences.Pref;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import org.joda.time.LocalDate;
 
 @EBean(scope = EBean.Scope.Singleton)
 public class Utility {
-  public static final String DATE_FORMAT = "yyyMMdd";
-
   @RootContext Context context;
   @Pref Pref_ pref;
 
@@ -34,76 +26,42 @@ public class Utility {
     return context.getString(R.string.format_temperature, temp);
   }
 
-  public String formatDate(String dateString) {
-    Date date = WeatherContract.getDateFromDb(dateString);
-    return DateFormat.getDateInstance().format(date);
-  }
+  public String getFriendlyDayString(long inputDateInSeconds) {
+    LocalDate inputDate = new LocalDate(inputDateInSeconds * 1000);
+    LocalDate todayDate = new LocalDate();
 
-  // Format used for storing dates in the database. Also used for converting those strings back into date objects for comparison/processing.
+    if (inputDate.equals(todayDate)) {
+      // Today, June 24th
+      return context.getString(R.string.format_full_friendly_date, context.getString(R.string.today), getFormattedMonthDay(inputDateInSeconds));
 
-  public String getFriendlyDayString(long date) {
-    Date todayDate = new Date();
-    String todayStr = WeatherContract.getDbDateString(todayDate);
-    Date inputDate = new Date(date * 1000);
+    } else if (inputDate.isBefore(todayDate.plusWeeks(1))) {
 
-    // if the date we're building the String for is today's date, the format is "Today, June 24"
-    if (todayStr.equals(dateStr)) {
-      String today = context.getString(R.string.today);
-      int formatId = R.string.format_full_friendly_date;
-      return String.format(context.getString(
-        formatId,
-        today,
-        getFormattedMonthDay(dateStr)
-        ));
+      // Tomorrow, Wednesday ...
+      return getDayName(inputDateInSeconds);
     } else {
-      Calendar cal = Calendar.getInstance();
-      cal.setTime(todayDate);
-      cal.add(Calendar.DATE, 7);
 
-      String weekFutureString = WeatherContract.getDbDateString(cal.getTime());
-
-      if (dateStr.compareTo(weekFutureString) < 0) {
-        // If the input date is less than a week in the future, just return the day name.
-        return getDayName(dateStr);
-      } else {
-        // Otherwise use the form "Mon JUn 3"
-        SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("EEE MMM dd");
-        return shortenedDateFormat.format(inputDate);
-      }
+      // Mon, Jun 1st
+      return inputDate.toString("EEE, MMM dd");
     }
   }
 
-  public String getDayName(long date) {
-    Date inputDate = new Date(date * 1000);
-    Date todayDate = new Date();
+  public String getDayName(long inputDateInSeconds) {
+    LocalDate inputDate = new LocalDate(inputDateInSeconds * 1000);
+    LocalDate todayDate = new LocalDate();
 
-    // TODO: START FROM HERE!!!!!!
-    // If the date is today, return the localized version of "Today" instead of the actual day name.
-    if (WeatherContract.getDbDateString(todayDate).equals(dateStr)) {
+    if (inputDate.equals(todayDate)) {
       return context.getString(R.string.today);
+
+    } else if (inputDate.equals(todayDate.plusDays(1))) {
+      return context.getString(R.string.tomorrow);
+
     } else {
-      Calendar cal = Calendar.getInstance();
-      cal.setTime(todayDate);
-      cal.add(Calendar.DATE, 1);
-
-      Date tomorrowDate = cal.getTime();
-
-      // If the date is set for tomorrow, the format is "Tomorrow"
-      if (WeatherContract.getDbDateString(tomorrowDate).equals(dateStr)) {
-        return context.getString(R.string.tomorrow);
-
-      // Otherwise the format is just the day of the week
-      } else {
-        SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE");
-        return dayFormat.format(inputDate);
-      }
+      return inputDate.dayOfWeek().getAsText();
     }
   }
 
-  public String getFormattedMonthDay(long date) {
-    Date inputDate = new Date(date * 1000);
-    SimpleDateFormat monthDayFormat = new SimpleDateFormat("MMMM dd");
-    return monthDayFormat.format(inputDate);
+  public String getFormattedMonthDay(long inputDateInSeconds) {
+    return new LocalDate(inputDateInSeconds * 1000).toString("MMMM dd");
   }
 
   public String getFormattedWind(double wind_speed, double wind_degrees) {

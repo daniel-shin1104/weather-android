@@ -62,7 +62,6 @@ public class DetailActivityFragment extends Fragment {
     double wind_degrees = detailActivity.wind_degrees;
     double pressure = detailActivity.pressure;
 
-
     iconView.setImageResource(utility.getArtResourceForWeatherCondition(weatherId));
 
     // Read date from cursor and update views for day of week and date

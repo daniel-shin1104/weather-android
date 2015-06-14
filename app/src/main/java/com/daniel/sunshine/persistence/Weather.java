@@ -6,10 +6,7 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 @Table(name = "Weather", id = BaseColumns._ID)
 public class Weather extends Model {
@@ -31,23 +28,7 @@ public class Weather extends Model {
       .execute();
   }
 
-  @Override
-  public String toString() {
-    return "Weather{" +
-      "weather_id=" + weather_id +
-      ", location=" + location +
-      ", date=" + date +
-      ", short_description='" + short_description + '\'' +
-      ", temperature_min=" + temperature_min +
-      ", temperature_max=" + temperature_max +
-      ", humidity=" + humidity +
-      ", pressure=" + pressure +
-      ", wind=" + wind +
-      ", degrees=" + degrees +
-      '}';
-  }
-
-  public static enum Columns {
+  public enum Columns {
     WEATHER_ID,
     LOCATION,
     DATE,
@@ -73,13 +54,5 @@ public class Weather extends Model {
       WIND_SPEED.columnName = "wind_speed";
       WIND_DEGREES.columnName = "wind_degrees";
     }
-  }
-
-  public String getFormattedDateString() {
-    return (new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH)).format(new Date(date * 1000));
-  }
-
-  public Date getDate() {
-    return new Date(date * 1000);
   }
 }

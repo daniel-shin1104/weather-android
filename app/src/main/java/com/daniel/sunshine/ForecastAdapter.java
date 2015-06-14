@@ -97,7 +97,6 @@ public class ForecastAdapter extends CursorAdapter {
       default: break;
     }
 
-    // FIXME: this method needs to accept long not String
     viewHolder.dateView.setText(utility.getFriendlyDayString(date));
     viewHolder.descriptionView.setText(description);
 

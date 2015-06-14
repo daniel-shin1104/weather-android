@@ -3,7 +3,6 @@ apply plugin: "android-apt"
 
 // Constants
 def packageName = "com.daniel.sunshine"
-def AndroidAnnotationsVersion = "3.3.1"
 
 // Build Script Dependencies
 buildscript {
@@ -58,8 +57,8 @@ dependencies {
   compile 'com.android.support:appcompat-v7:22.2.0'
 
   // Android Annotations
-  apt "org.androidannotations:androidannotations:$AndroidAnnotationsVersion"
-  compile "org.androidannotations:androidannotations-api:$AndroidAnnotationsVersion"
+  apt "org.androidannotations:androidannotations:3.3.1"
+  compile "org.androidannotations:androidannotations-api:3.3.1"
 
   // Guava
   compile "com.google.guava:guava:18.0"
@@ -73,6 +72,9 @@ dependencies {
   // OkHttp
   compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
   compile 'com.squareup.okhttp:okhttp:2.0.0'
+
+  // Joda-Time
+  compile "joda-time:joda-time:2.8"
 }
 
 // Custom Hooks for android plugin tasks.

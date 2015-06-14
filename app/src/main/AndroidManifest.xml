@@ -14,7 +14,6 @@
     android:icon="@mipmap/ic_launcher"
     android:label="@string/app_name"
     android:theme="@style/AppTheme"
-
     android:name="com.activeandroid.app.Application"
     >
 
@@ -38,33 +37,18 @@
     <activity
       android:name=".DetailActivity_"
       android:label="@string/title_activity_detail"
-      android:parentActivityName=".MainActivity"
+      android:parentActivityName=".MainActivity_"
       >
-      <meta-data
-        android:name="android.support.PARENT_ACTIVITY"
-        android:value="com.daniel.sunshine.MainActivity"
-        />
     </activity>
 
     <!-- SettingActivity -->
     <activity
       android:name=".SettingsActivity_"
       android:label="@string/title_activity_settings"
-      android:parentActivityName=".MainActivity"
+      android:parentActivityName=".MainActivity_"
       >
-
-      <meta-data
-        android:name="android.support.PARENT_ACTIVITY"
-        android:value=".MainActivity"
-        />
     </activity>
 
-    <!-- OpenWeatherMap Provider -->
-    <!--<provider-->
-      <!--android:authorities="com.daniel.sunshine"-->
-      <!--android:name=".data.WeatherProvider"-->
-      <!--android:exported="false"-->
-      <!--/>-->
     <provider
       android:authorities="com.daniel.sunshine"
       android:name="com.activeandroid.content.ContentProvider"
@@ -79,10 +63,12 @@
     <!-- ActiveAndroid Configurations -->
     <meta-data
       android:name="AA_DB_NAME"
-      android:value="sunshine.db" />
+      android:value="sunshine.db"
+      />
     <meta-data
       android:name="AA_DB_VERSION"
-      android:value="1" />
+      android:value="1"
+      />
     <meta-data
       android:name="AA_MODELS"
       android:value="com.daniel.sunshine.persistence.Location, com.daniel.sunshine.persistence.Weather"
