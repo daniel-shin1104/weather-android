@@ -10,9 +10,6 @@ import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EIntentService;
 import org.androidannotations.annotations.ServiceAction;
 import org.androidannotations.api.support.app.AbstractIntentService;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 @EIntentService
 public class SunshineService extends AbstractIntentService {
@@ -23,11 +20,8 @@ public class SunshineService extends AbstractIntentService {
   @ServiceAction
   @Background
   void requestWeatherInformation(String locationQuery) {
-
-    // TODO: replace this ugly callback with lambda.
-    RestClient.get().getForecast(locationQuery, new Callback<WeatherResponse>() {
-      @Override
-      public void success(WeatherResponse weatherResponse, Response response) {
+    RestClient.get().getForecast(locationQuery)
+      .subscribe(weatherResponse -> {
         weatherResponse.printAll();
 
         ActiveAndroid.beginTransaction();
@@ -58,16 +52,9 @@ public class SunshineService extends AbstractIntentService {
             weather.save();
           }
           ActiveAndroid.setTransactionSuccessful();
-        }
-        finally {
+        } finally {
           ActiveAndroid.endTransaction();
         }
-      }
-
-      @Override
-      public void failure(RetrofitError error) {
-        error.printStackTrace();
-      }
-    });
+      });
   }
 }

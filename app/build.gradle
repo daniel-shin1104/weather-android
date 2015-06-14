@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: "android-apt"
+apply plugin: "me.tatarka.retrolambda"
 
 // Constants
 def packageName = "com.daniel.sunshine"
@@ -11,7 +12,11 @@ buildscript {
   }
 
   dependencies {
+    // android-apt
     classpath "com.neenbedankt.gradle.plugins:android-apt:1.4"
+
+    // retrolambda
+    classpath "me.tatarka:gradle-retrolambda:3.1.0"
   }
 }
 
@@ -41,6 +46,11 @@ android {
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
   }
 }
 
@@ -75,6 +85,9 @@ dependencies {
 
   // Joda-Time
   compile "joda-time:joda-time:2.8"
+
+  // RxJava
+  compile 'io.reactivex:rxjava:1.0.10'
 }
 
 // Custom Hooks for android plugin tasks.
