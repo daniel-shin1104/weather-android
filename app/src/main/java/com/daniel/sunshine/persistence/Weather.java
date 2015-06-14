@@ -10,7 +10,7 @@ import java.util.List;
 
 @Table(name = "Weather", id = BaseColumns._ID)
 public class Weather extends Model {
-  @Column(index = true) public int weather_id;
+  @Column public int weather_id;
   @Column public Location location;
   @Column public long date;
   @Column public String short_description;

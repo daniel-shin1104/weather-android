@@ -40,7 +40,7 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
       Cursor cursor = forecastAdapter.getCursor();
       if (cursor != null && cursor.moveToPosition(position)) {
         DetailActivity_.intent(this)
-          .weather_id(cursor.getColumnIndex(Weather.Columns.WEATHER_ID.columnName))
+          .weather_id(cursor.getInt(cursor.getColumnIndex(Weather.Columns.WEATHER_ID.columnName)))
           .date(cursor.getLong(cursor.getColumnIndex(Weather.Columns.DATE.columnName)))
           .description(cursor.getString(cursor.getColumnIndex(Weather.Columns.SHORT_DESCRIPTION.columnName)))
           .high(cursor.getDouble(cursor.getColumnIndex(Weather.Columns.TEMPERATURE_MAX.columnName)))

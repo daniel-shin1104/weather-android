@@ -1,6 +1,7 @@
 package com.daniel.sunshine.service;
 
 import com.activeandroid.ActiveAndroid;
+import com.activeandroid.query.Delete;
 import com.daniel.sunshine.http.RestClient;
 import com.daniel.sunshine.http.WeatherResponse;
 import com.daniel.sunshine.persistence.Location;
@@ -15,8 +16,6 @@ import retrofit.client.Response;
 
 @EIntentService
 public class SunshineService extends AbstractIntentService {
-  private final String LOG_TAG = SunshineService.class.getSimpleName();
-
   public SunshineService() {
     super(SunshineService.class.getSimpleName());
   }
@@ -41,6 +40,8 @@ public class SunshineService extends AbstractIntentService {
           location.save();
 
           for (WeatherResponse._List item : weatherResponse.list) {
+            // delete row with same date
+            new Delete().from(Weather.class).where("date = ?", item.dt).execute();
 
             // Persist Weather
             Weather weather = new Weather();
