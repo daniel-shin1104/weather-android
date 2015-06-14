@@ -9,3 +9,6 @@ Used Libraries / Frameworks
 - ActiveAndroid
 - Retrofit
 - OkHttp
+- Joda-Time
+- RetroLambda
+- RxJava
