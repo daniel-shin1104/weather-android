@@ -13,6 +13,8 @@ import com.daniel.sunshine.persistence.Weather;
 import com.daniel.sunshine.service.SunshineService_;
 import org.androidannotations.annotations.*;
 
+import java.util.Date;
+
 @EFragment(R.layout.fragment_main)
 @OptionsMenu(R.menu.main)
 public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor> {
@@ -41,7 +43,7 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
       if (cursor != null && cursor.moveToPosition(position)) {
         DetailActivity_.intent(this)
           .weather_id(cursor.getInt(cursor.getColumnIndex(Weather.Columns.WEATHER_ID.columnName)))
-          .date(cursor.getLong(cursor.getColumnIndex(Weather.Columns.DATE.columnName)))
+          .date(new Date(cursor.getLong(cursor.getColumnIndex(Weather.Columns.DATE.columnName))))
           .description(cursor.getString(cursor.getColumnIndex(Weather.Columns.SHORT_DESCRIPTION.columnName)))
           .high(cursor.getDouble(cursor.getColumnIndex(Weather.Columns.TEMPERATURE_MAX.columnName)))
           .low(cursor.getDouble(cursor.getColumnIndex(Weather.Columns.TEMPERATURE_MIN.columnName)))

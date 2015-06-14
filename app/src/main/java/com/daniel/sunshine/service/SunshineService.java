@@ -14,6 +14,8 @@ import org.androidannotations.annotations.ServiceAction;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.api.support.app.AbstractIntentService;
 
+import java.util.Date;
+
 @EIntentService
 public class SunshineService extends AbstractIntentService {
   @SystemService LocationManager locationManager;
@@ -48,7 +50,7 @@ public class SunshineService extends AbstractIntentService {
             Weather weather = new Weather();
             weather.weather_id = item.weather.get(0).id;
             weather.location = location;
-            weather.date = item.dt;
+            weather.date = new Date(item.dt * 1000);
             weather.short_description = item.weather.get(0).main;
             weather.temperature_min = item.temp.min;
             weather.temperature_max = item.temp.max;

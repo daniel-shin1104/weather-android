@@ -7,6 +7,8 @@ import org.androidannotations.annotations.RootContext;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.joda.time.LocalDate;
 
+import java.util.Date;
+
 @EBean(scope = EBean.Scope.Singleton)
 public class Utility {
   @RootContext Context context;
@@ -22,18 +24,18 @@ public class Utility {
     return context.getString(R.string.format_temperature, temp);
   }
 
-  public String getFriendlyDayString(long inputDateInSeconds) {
-    LocalDate inputDate = new LocalDate(inputDateInSeconds * 1000);
+  public String getFriendlyDayString(Date date) {
+    LocalDate inputDate = new LocalDate(date);
     LocalDate todayDate = new LocalDate();
 
     if (inputDate.equals(todayDate)) {
       // Today, June 24th
-      return context.getString(R.string.format_full_friendly_date, context.getString(R.string.today), getFormattedMonthDay(inputDateInSeconds));
+      return context.getString(R.string.format_full_friendly_date, context.getString(R.string.today), getFormattedMonthDay(date));
 
     } else if (inputDate.isBefore(todayDate.plusWeeks(1))) {
 
       // Tomorrow, Wednesday ...
-      return getDayName(inputDateInSeconds);
+      return getDayName(date);
     } else {
 
       // Mon, Jun 1st
@@ -41,8 +43,8 @@ public class Utility {
     }
   }
 
-  public String getDayName(long inputDateInSeconds) {
-    LocalDate inputDate = new LocalDate(inputDateInSeconds * 1000);
+  public String getDayName(Date date) {
+    LocalDate inputDate = new LocalDate(date);
     LocalDate todayDate = new LocalDate();
 
     if (inputDate.equals(todayDate)) {
@@ -56,8 +58,8 @@ public class Utility {
     }
   }
 
-  public String getFormattedMonthDay(long inputDateInSeconds) {
-    return new LocalDate(inputDateInSeconds * 1000).toString("MMMM dd");
+  public String getFormattedMonthDay(Date date) {
+    return new LocalDate(date).toString("MMMM dd");
   }
 
   public String getFormattedWind(double wind_speed, double wind_degrees) {

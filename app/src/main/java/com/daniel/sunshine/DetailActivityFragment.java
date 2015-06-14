@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import org.androidannotations.annotations.*;
 
+import java.util.Date;
+
 @EFragment(R.layout.fragment_detail)
 @OptionsMenu(R.menu.menu_detail)
 public class DetailActivityFragment extends Fragment {
@@ -53,7 +55,7 @@ public class DetailActivityFragment extends Fragment {
 
     /* Get Extra */
     int weatherId = detailActivity.weather_id;
-    long date = detailActivity.date;
+    Date date = detailActivity.date;
     String description = detailActivity.description;
     double high = detailActivity.high;
     double low = detailActivity.low;

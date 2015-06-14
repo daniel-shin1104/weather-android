@@ -13,6 +13,8 @@ import com.google.common.base.Optional;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 
+import java.util.Date;
+
 @EBean
 public class ForecastAdapter extends CursorAdapter {
   @Bean Utility utility;
@@ -90,7 +92,7 @@ public class ForecastAdapter extends CursorAdapter {
 
     // Read data from cursor
     int weatherId = cursor.getColumnIndex(Weather.Columns.WEATHER_ID.columnName);
-    long date = cursor.getLong(cursor.getColumnIndex(Weather.Columns.DATE.columnName));
+    Date date = new Date(cursor.getLong(cursor.getColumnIndex(Weather.Columns.DATE.columnName)));
     String description = cursor.getString(cursor.getColumnIndex(Weather.Columns.SHORT_DESCRIPTION.columnName));
     double high = cursor.getDouble(cursor.getColumnIndex(Weather.Columns.TEMPERATURE_MAX.columnName));
     double low = cursor.getDouble(cursor.getColumnIndex(Weather.Columns.TEMPERATURE_MIN.columnName));

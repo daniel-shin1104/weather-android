@@ -6,13 +6,14 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 
+import java.util.Date;
 import java.util.List;
 
 @Table(name = "Weather", id = BaseColumns._ID)
 public class Weather extends Model {
   @Column public int weather_id;
   @Column public Location location;
-  @Column public long date;
+  @Column public Date date;
   @Column public String short_description;
   @Column public double temperature_min;
   @Column public double temperature_max;
