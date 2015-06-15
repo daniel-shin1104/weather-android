@@ -88,6 +88,9 @@ dependencies {
 
   // RxJava
   compile 'io.reactivex:rxjava:1.0.10'
+
+  // Picasso
+  compile "com.squareup.picasso:picasso:2.5.2"
 }
 
 // Custom Hooks for android plugin tasks.

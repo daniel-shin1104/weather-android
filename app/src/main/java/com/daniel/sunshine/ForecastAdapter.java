@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.daniel.sunshine.persistence.Weather;
 import com.google.common.base.Optional;
+import com.squareup.picasso.Picasso;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 
@@ -91,7 +92,7 @@ public class ForecastAdapter extends CursorAdapter {
     ViewHolder viewHolder = (ViewHolder) view.getTag();
 
     // Read data from cursor
-    int weatherId = cursor.getColumnIndex(Weather.Columns.WEATHER_ID.columnName);
+    int weatherId = cursor.getInt(cursor.getColumnIndex(Weather.Columns.WEATHER_ID.columnName));
     Date date = new Date(cursor.getLong(cursor.getColumnIndex(Weather.Columns.DATE.columnName)));
     String description = cursor.getString(cursor.getColumnIndex(Weather.Columns.SHORT_DESCRIPTION.columnName));
     double high = cursor.getDouble(cursor.getColumnIndex(Weather.Columns.TEMPERATURE_MAX.columnName));
@@ -101,17 +102,21 @@ public class ForecastAdapter extends CursorAdapter {
     Optional<ViewType> viewType = ViewType.fromViewTypeIndex(viewTypeIndex);
     if (!viewType.isPresent()) { throw new NullPointerException(); }
 
+    // Enable debugging
+    Picasso.with(context).setIndicatorsEnabled(true);
     switch (viewType.get()) {
       case TODAY:
-        viewHolder.iconView.setImageResource(utility.getArtResourceForWeatherCondition(
-          cursor.getInt(weatherId)
-        ));
+        Picasso.with(context)
+          .load(utility.getArtResourceURLForWeatherCondition(weatherId))
+          .error(utility.getArtResourceForWeatherCondition(weatherId))
+          .into(viewHolder.iconView);
         break;
 
       case FUTURE_DAY:
-        viewHolder.iconView.setImageResource(utility.getIconResourceFromWeatherCondition(
-          cursor.getInt(weatherId)
-        ));
+        Picasso.with(context)
+          .load(utility.getArtResourceURLForWeatherCondition(weatherId))
+          .error(utility.getIconResourceFromWeatherCondition(weatherId))
+          .into(viewHolder.iconView);
         break;
 
       default: break;

@@ -34,6 +34,8 @@ public class SunshineService extends AbstractIntentService {
         weatherResponse.printAll();
 
         ActiveAndroid.beginTransaction();
+        // Reset before saving.
+        new Delete().from(Weather.class).execute();
         try {
           // Persist Location
           Location location = new Location();
@@ -43,9 +45,6 @@ public class SunshineService extends AbstractIntentService {
           location.save();
 
           for (WeatherResponse._List item : weatherResponse.list) {
-            // delete row with same date
-            new Delete().from(Weather.class).where("date = ?", item.dt).execute();
-
             // Persist Weather
             Weather weather = new Weather();
             weather.weather_id = item.weather.get(0).id;
