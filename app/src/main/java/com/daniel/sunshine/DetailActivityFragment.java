@@ -23,7 +23,6 @@ public class DetailActivityFragment extends Fragment {
   private String forecast;
 
   @ViewById(R.id.detail_icon) ImageView iconView;
-  @ViewById(R.id.detail_day_textview) TextView friendlyDateView;
   @ViewById(R.id.detail_date_textview) TextView dateView;
   @ViewById(R.id.detail_forecast_textview) TextView descriptionView;
   @ViewById(R.id.detail_high_textview) TextView highTempView;
@@ -67,9 +66,7 @@ public class DetailActivityFragment extends Fragment {
     iconView.setImageResource(utility.getArtResourceForWeatherCondition(weatherId));
 
     // Read date from cursor and update views for day of week and date
-    String friendlyDateText = utility.getDayName(date);
     String dateText = utility.getFormattedMonthDay(date);
-    friendlyDateView.setText(friendlyDateText);
     dateView.setText(dateText);
 
     descriptionView.setText(description);
