@@ -1,14 +1,19 @@
 package com.daniel.sunshine;
 
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
+import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
+import org.androidannotations.annotations.ViewById;
 
 import java.util.Date;
 
 
 @EActivity(R.layout.activity_detail)
 public class DetailActivity extends ActionBarActivity {
+  @ViewById Toolbar toolbar;
+
   @Extra int weather_id;
   @Extra Date date;
   @Extra String description;
@@ -18,4 +23,11 @@ public class DetailActivity extends ActionBarActivity {
   @Extra double wind_speed;
   @Extra double wind_degrees;
   @Extra double pressure;
+
+  @AfterViews
+  void onViewCreated() {
+    setSupportActionBar(toolbar);
+    getSupportActionBar().setElevation(0f);
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+  }
 }
