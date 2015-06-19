@@ -9,6 +9,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.TextView;
 import com.activeandroid.content.ContentProvider;
 import com.daniel.sunshine.persistence.Weather;
@@ -39,24 +40,6 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
   void onOptionsActionSettingsSelected() {
     startActivity(new Intent(getActivity(), SettingsActivity_.class));
   }
-
-//  @ItemClick(R.id.recyclerview_forecast)
-//  void onListViewClick(int position) {
-//    Cursor cursor = forecastAdapter.getCursor();
-//    if (cursor != null && cursor.moveToPosition(position)) {
-//      DetailActivity_.intent(this)
-//        .weather_id(cursor.getInt(cursor.getColumnIndex(Weather.Columns.WEATHER_ID.columnName)))
-//        .date(new Date(cursor.getLong(cursor.getColumnIndex(Weather.Columns.DATE.columnName))))
-//        .description(cursor.getString(cursor.getColumnIndex(Weather.Columns.SHORT_DESCRIPTION.columnName)))
-//        .high(cursor.getDouble(cursor.getColumnIndex(Weather.Columns.TEMPERATURE_MAX.columnName)))
-//        .low(cursor.getDouble(cursor.getColumnIndex(Weather.Columns.TEMPERATURE_MIN.columnName)))
-//        .humidity(cursor.getInt(cursor.getColumnIndex(Weather.Columns.HUMIDITY.columnName)))
-//        .wind_speed(cursor.getDouble(cursor.getColumnIndex(Weather.Columns.WIND_SPEED.columnName)))
-//        .wind_degrees(cursor.getDouble(cursor.getColumnIndex(Weather.Columns.WIND_DEGREES.columnName)))
-//        .pressure(cursor.getDouble(cursor.getColumnIndex(Weather.Columns.PRESSURE.columnName)))
-//        .start();
-//    }
-//  }
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
@@ -98,6 +81,8 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
 
     if (forecastAdapter.getItemCount() == 0) {
       updateEmptyView();
+    } else {
+      emptyView.setVisibility(View.GONE);
     }
   }
 
@@ -114,6 +99,8 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
     }
 
     emptyView.setText(emptyViewMessageId);
+
+    emptyView.setVisibility(View.VISIBLE);
   }
 }
 
