@@ -2,6 +2,7 @@ package com.daniel.sunshine;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.location.*;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,10 @@ import com.daniel.sunshine.persistence.Weather;
 import com.daniel.sunshine.service.SunshineService_;
 import org.androidannotations.annotations.*;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 @EFragment(R.layout.fragment_main)
 @OptionsMenu(R.menu.main)
 public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor> {
@@ -26,6 +31,7 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
 
   // Portrait only
   @ViewById(R.id.appbar) AppBarLayout appBarLayout;
+  @ViewById(R.id.location_text_view) TextView locationTextView;
 
   // Landscape only
   @ViewById(R.id.parallax_bar) AppBarLayout parallaxBarLayout;
@@ -33,8 +39,13 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
   @Bean ForecastAdapter forecastAdapter;
   @Bean Utility utility;
 
+  @SystemService LocationManager locationManager;
+
+
   @AfterViews
   void onViewCreated() {
+    updateWeather();
+
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     recyclerView.setAdapter(forecastAdapter);
 
@@ -92,15 +103,38 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
   }
 
   public void updateWeather() {
+    android.location.Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), true));
+
+    updateAddress(location);
+
     SunshineService_.intent(getActivity().getApplication())
-      .requestWeatherInformation()
+      .requestWeatherInformation(location)
       .start();
   }
 
-  @Override
-  public void onStart() {
-    super.onStart();
-    updateWeather();
+  @Background
+  void updateAddress(Location location) {
+    Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+    try {
+      List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+      if (addresses.size() > 0) {
+        Address address = addresses.get(0);
+
+        String locality = address.getLocality();
+        String country = address.getCountryName();
+
+        updateAddressUI(locality, country);
+      }
+    } catch (IOException error) {
+      error.printStackTrace();
+    }
+  }
+
+  @UiThread
+  void updateAddressUI(String locality, String country) {
+    if (locationTextView != null) {
+      locationTextView.setText(locality + ", " + country);
+    }
   }
 
   ////////////////////////////////////////////

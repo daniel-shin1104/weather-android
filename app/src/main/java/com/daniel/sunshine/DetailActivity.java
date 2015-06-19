@@ -2,10 +2,7 @@ package com.daniel.sunshine;
 
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Extra;
-import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.*;
 
 import java.util.Date;
 
@@ -13,6 +10,8 @@ import java.util.Date;
 @EActivity(R.layout.activity_detail)
 public class DetailActivity extends AppCompatActivity {
   @ViewById Toolbar toolbar;
+
+  @Bean Utility utility;
 
   @Extra int weather_id;
   @Extra Date date;
@@ -29,6 +28,8 @@ public class DetailActivity extends AppCompatActivity {
     setSupportActionBar(toolbar);
     getSupportActionBar().setElevation(0f);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    getSupportActionBar().setDisplayShowTitleEnabled(false);
+    getSupportActionBar().setDisplayShowTitleEnabled(true);
+
+    getSupportActionBar().setTitle(utility.getFormattedMonthDay(date));
   }
 }
