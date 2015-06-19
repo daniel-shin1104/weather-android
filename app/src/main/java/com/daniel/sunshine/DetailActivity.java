@@ -1,6 +1,6 @@
 package com.daniel.sunshine;
 
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
@@ -11,7 +11,7 @@ import java.util.Date;
 
 
 @EActivity(R.layout.activity_detail)
-public class DetailActivity extends ActionBarActivity {
+public class DetailActivity extends AppCompatActivity {
   @ViewById Toolbar toolbar;
 
   @Extra int weather_id;

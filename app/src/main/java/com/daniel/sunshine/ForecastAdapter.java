@@ -39,8 +39,6 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapterViewHol
       }
     }
 
-    static int getLength() { return ViewType.values().length; }
-
     static Optional<ViewType> fromViewTypeIndex(int viewTypeIndex) {
       for (ViewType viewType : ViewType.values()) {
         if (viewType.viewTypeIndex == viewTypeIndex) {
@@ -78,8 +76,6 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapterViewHol
       Optional<ViewType> viewType = ViewType.fromViewTypeIndex(viewTypeIndex);
       if (!viewType.isPresent()) { throw new NullPointerException(); }
 
-      // Enable debugging
-      Picasso.with(context).setIndicatorsEnabled(true);
       switch (viewType.get()) {
         case TODAY:
           Picasso.with(context)

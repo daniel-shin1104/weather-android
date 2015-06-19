@@ -8,11 +8,10 @@
   app:columnCount="2"
   >
 
-  <!-- FIXME: Space doesn't apply for some reason. -->
   <android.support.v7.widget.Space
     app:layout_columnSpan="2"
     app:layout_columnWeight="1"
-    app:layout_rowWeight="5"
+    app:layout_rowWeight="1"
     />
 
   <TextView
