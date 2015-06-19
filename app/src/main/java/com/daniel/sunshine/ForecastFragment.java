@@ -7,28 +7,27 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.widget.ListView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 import com.activeandroid.content.ContentProvider;
 import com.daniel.sunshine.persistence.Weather;
 import com.daniel.sunshine.service.SunshineService_;
 import org.androidannotations.annotations.*;
 
-import java.util.Date;
-
 @EFragment(R.layout.fragment_main)
 @OptionsMenu(R.menu.main)
 public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor> {
-  @ViewById(R.id.listview_forecast) ListView listView;
-  @ViewById(R.id.listview_forecast_empty) TextView emptyView;
+  @ViewById(R.id.recyclerview_forecast) RecyclerView recyclerView;
+  @ViewById(R.id.recyclerview_forecast_empty) TextView emptyView;
 
   @Bean ForecastAdapter forecastAdapter;
   @Bean Utility utility;
 
   @AfterViews
   void onViewCreated() {
-    listView.setEmptyView(emptyView);
-    listView.setAdapter(forecastAdapter);
+    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    recyclerView.setAdapter(forecastAdapter);
   }
 
   @OptionsItem(R.id.action_refresh)
@@ -41,23 +40,23 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
     startActivity(new Intent(getActivity(), SettingsActivity_.class));
   }
 
-  @ItemClick(R.id.listview_forecast)
-  void onListViewClick(int position) {
-    Cursor cursor = forecastAdapter.getCursor();
-    if (cursor != null && cursor.moveToPosition(position)) {
-      DetailActivity_.intent(this)
-        .weather_id(cursor.getInt(cursor.getColumnIndex(Weather.Columns.WEATHER_ID.columnName)))
-        .date(new Date(cursor.getLong(cursor.getColumnIndex(Weather.Columns.DATE.columnName))))
-        .description(cursor.getString(cursor.getColumnIndex(Weather.Columns.SHORT_DESCRIPTION.columnName)))
-        .high(cursor.getDouble(cursor.getColumnIndex(Weather.Columns.TEMPERATURE_MAX.columnName)))
-        .low(cursor.getDouble(cursor.getColumnIndex(Weather.Columns.TEMPERATURE_MIN.columnName)))
-        .humidity(cursor.getInt(cursor.getColumnIndex(Weather.Columns.HUMIDITY.columnName)))
-        .wind_speed(cursor.getDouble(cursor.getColumnIndex(Weather.Columns.WIND_SPEED.columnName)))
-        .wind_degrees(cursor.getDouble(cursor.getColumnIndex(Weather.Columns.WIND_DEGREES.columnName)))
-        .pressure(cursor.getDouble(cursor.getColumnIndex(Weather.Columns.PRESSURE.columnName)))
-        .start();
-    }
-  }
+//  @ItemClick(R.id.recyclerview_forecast)
+//  void onListViewClick(int position) {
+//    Cursor cursor = forecastAdapter.getCursor();
+//    if (cursor != null && cursor.moveToPosition(position)) {
+//      DetailActivity_.intent(this)
+//        .weather_id(cursor.getInt(cursor.getColumnIndex(Weather.Columns.WEATHER_ID.columnName)))
+//        .date(new Date(cursor.getLong(cursor.getColumnIndex(Weather.Columns.DATE.columnName))))
+//        .description(cursor.getString(cursor.getColumnIndex(Weather.Columns.SHORT_DESCRIPTION.columnName)))
+//        .high(cursor.getDouble(cursor.getColumnIndex(Weather.Columns.TEMPERATURE_MAX.columnName)))
+//        .low(cursor.getDouble(cursor.getColumnIndex(Weather.Columns.TEMPERATURE_MIN.columnName)))
+//        .humidity(cursor.getInt(cursor.getColumnIndex(Weather.Columns.HUMIDITY.columnName)))
+//        .wind_speed(cursor.getDouble(cursor.getColumnIndex(Weather.Columns.WIND_SPEED.columnName)))
+//        .wind_degrees(cursor.getDouble(cursor.getColumnIndex(Weather.Columns.WIND_DEGREES.columnName)))
+//        .pressure(cursor.getDouble(cursor.getColumnIndex(Weather.Columns.PRESSURE.columnName)))
+//        .start();
+//    }
+//  }
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
@@ -97,7 +96,7 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
   public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
     forecastAdapter.swapCursor(data);
 
-    if (forecastAdapter.getCount() == 0) {
+    if (forecastAdapter.getItemCount() == 0) {
       updateEmptyView();
     }
   }

@@ -6,8 +6,8 @@
   tools:context=".MainActivityFragment"
   >
 
-  <ListView
-    android:id="@+id/listview_forecast"
+  <android.support.v7.widget.RecyclerView
+    android:id="@+id/recyclerview_forecast"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:divider="@null"
@@ -17,7 +17,7 @@
 
   <!-- Empty List -->
   <TextView
-    android:id="@+id/listview_forecast_empty"
+    android:id="@+id/recyclerview_forecast_empty"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
