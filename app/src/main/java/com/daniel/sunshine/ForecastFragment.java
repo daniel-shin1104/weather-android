@@ -3,6 +3,7 @@ package com.daniel.sunshine;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
@@ -22,8 +23,11 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
   @ViewById(R.id.recyclerview_forecast) RecyclerView recyclerView;
   @ViewById(R.id.recyclerview_forecast_empty) TextView emptyView;
 
+  // Portrait only
+  @ViewById(R.id.appbar) AppBarLayout appBarLayout;
+
   // Landscape only
-  @ViewById(R.id.parallax_view) View parallaxView;
+  @ViewById(R.id.parallax_bar) AppBarLayout parallaxBarLayout;
 
   @Bean ForecastAdapter forecastAdapter;
   @Bean Utility utility;
@@ -33,21 +37,31 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     recyclerView.setAdapter(forecastAdapter);
 
-    if (parallaxView == null) { return; }
-
-    // Implement parallax scrolling.
     recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
       @Override
       public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
 
-        int max = parallaxView.getHeight();
+        // Implement parallax scrolling.
+        if (parallaxBarLayout != null) {
+          int max = parallaxBarLayout.getHeight();
 
-        if (dy > 0) {
-          parallaxView.setTranslationY(Math.max(-max, parallaxView.getTranslationY() - dy / 2));
-        } else {
-          parallaxView.setTranslationY(Math.min(0, parallaxView.getTranslationY() - dy / 2));
+          if (dy > 0) {
+            parallaxBarLayout.setTranslationY(Math.max(-max, parallaxBarLayout.getTranslationY() - dy / 2));
+          } else {
+            parallaxBarLayout.setTranslationY(Math.min(0, parallaxBarLayout.getTranslationY() - dy / 2));
+          }
         }
+
+//        // Implement AppBar elevation
+//        if (appBarLayout != null) {
+//          // FIXME: doens't work with pre-v21
+//          if (recyclerView.computeVerticalScrollOffset() == 0) {
+//            ViewCompat.setElevation(appBarLayout, 0);
+//          } else {
+//            ViewCompat.setElevation(appBarLayout, appBarLayout.getTargetElevation());
+//          }
+//        }
       }
     });
   }
