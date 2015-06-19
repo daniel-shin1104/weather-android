@@ -2,23 +2,19 @@ package com.daniel.sunshine;
 
 import android.content.Intent;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.ShareActionProvider;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
-import org.androidannotations.annotations.*;
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
 
 import java.util.Date;
 
 @EFragment(R.layout.fragment_detail)
-@OptionsMenu(R.menu.menu_detail)
 public class DetailActivityFragment extends Fragment {
   @Bean Utility utility;
 
-  private ShareActionProvider shareActionprovider;
   private String location;
   private String forecast;
 
@@ -30,23 +26,6 @@ public class DetailActivityFragment extends Fragment {
   @ViewById(R.id.detail_humidity_textview) TextView humidityView;
   @ViewById(R.id.detail_wind_textview) TextView windView;
   @ViewById(R.id.detail_pressure_textview) TextView pressureView;
-
-  @Override
-  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    // Inflate the menu; this adds items to the action bar if it is present
-    inflater.inflate(R.menu.menu_detail, menu);
-
-    // Retrieve the share menu item
-    MenuItem menuItem = menu.findItem(R.id.action_share);
-
-    // Get the provider and hold onto it to set/change the share intent.
-    shareActionprovider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
-
-    // If onLoadFinished happens before this, we can go ahead and set the share intent now.
-    if (forecast != null) {
-      shareActionprovider.setShareIntent(createShareForecastIntent());
-    }
-  }
 
   @AfterViews
   void onViewCreated() {
@@ -92,11 +71,6 @@ public class DetailActivityFragment extends Fragment {
 
     // We still need this for the share intent
     forecast = String.format("%s - %s - %s/%s", dateText, description, high, low);
-
-    // If onCreateOptionsMenu has already happened, we need to update the share intent now.
-    if (shareActionprovider != null) {
-      shareActionprovider.setShareIntent(createShareForecastIntent());
-    }
   }
 
   private Intent createShareForecastIntent() {
