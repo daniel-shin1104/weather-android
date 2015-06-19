@@ -22,6 +22,9 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
   @ViewById(R.id.recyclerview_forecast) RecyclerView recyclerView;
   @ViewById(R.id.recyclerview_forecast_empty) TextView emptyView;
 
+  // Landscape only
+  @ViewById(R.id.parallax_view) View parallaxView;
+
   @Bean ForecastAdapter forecastAdapter;
   @Bean Utility utility;
 
@@ -29,6 +32,32 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
   void onViewCreated() {
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     recyclerView.setAdapter(forecastAdapter);
+
+    if (parallaxView == null) { return; }
+
+    // Implement parallax scrolling.
+    recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+      @Override
+      public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        super.onScrolled(recyclerView, dx, dy);
+
+        int max = parallaxView.getHeight();
+
+        if (dy > 0) {
+          parallaxView.setTranslationY(Math.max(-max, parallaxView.getTranslationY() - dy / 2));
+        } else {
+          parallaxView.setTranslationY(Math.min(0, parallaxView.getTranslationY() - dy / 2));
+        }
+      }
+    });
+  }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    if (recyclerView != null) {
+      recyclerView.clearOnScrollListeners();
+    }
   }
 
   @OptionsItem(R.id.action_refresh)
