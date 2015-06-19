@@ -15,3 +15,12 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-dontwarn java.lang.invoke.*
+-dontwarn sun.misc.Unsafe
+-dontwarn com.google.**
+-dontwarn org.joda.convert.**
+-dontwarn org.springframework.**
+-dontwarn java.nio.file.*
+-dontwarn com.squareup.okhttp.**
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
