@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -53,15 +54,15 @@ public class ForecastFragment extends Fragment implements LoaderCallbacks<Cursor
           }
         }
 
-//        // Implement AppBar elevation
-//        if (appBarLayout != null) {
-//          // FIXME: doens't work with pre-v21
-//          if (recyclerView.computeVerticalScrollOffset() == 0) {
-//            ViewCompat.setElevation(appBarLayout, 0);
-//          } else {
-//            ViewCompat.setElevation(appBarLayout, appBarLayout.getTargetElevation());
-//          }
-//        }
+        // Implement AppBar elevation
+        if (appBarLayout != null) {
+          // FIXME: doens't work with pre-v21
+          if (recyclerView.computeVerticalScrollOffset() == 0) {
+            ViewCompat.setElevation(appBarLayout, 0);
+          } else {
+            ViewCompat.setElevation(appBarLayout, appBarLayout.getTargetElevation());
+          }
+        }
       }
     });
   }

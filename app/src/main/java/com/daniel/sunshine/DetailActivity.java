@@ -29,5 +29,6 @@ public class DetailActivity extends ActionBarActivity {
     setSupportActionBar(toolbar);
     getSupportActionBar().setElevation(0f);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    getSupportActionBar().setDisplayShowTitleEnabled(false);
   }
 }
