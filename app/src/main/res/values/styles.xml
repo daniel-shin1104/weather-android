@@ -8,6 +8,14 @@
     <item name="toolbarStyle">@style/Toolbar</item>
   </style>
 
+  <style name="AppTheme.Main" parent="@style/AppTheme"/>
+
+  <style name="AppTheme.Details" parent="@style/AppTheme">
+    <!-- FIXME: NOT WORKING -->
+    <item name="android:windowEnterAnimation">@anim/abc_slide_in_bottom</item>
+    <item name="android:windowExitAnimation">@anim/abc_slide_out_bottom</item>
+  </style>
+
   <!-- Main Activity Toolbar Style -->
   <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
     <item name="android:background">?attr/colorPrimary</item>
